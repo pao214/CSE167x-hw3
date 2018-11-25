@@ -7,10 +7,10 @@ ODIR = obj
 SDIR = src
 TDIR = test
 
-CFLAGS = -I$(IDIR) -g -std=c++14 -Wall -Werror
+CFLAGS = -Iglm-0.9.7.1 -I$(IDIR) -g -std=c++14 -Wall -Werror
 LDFLAGS = -L$(LDIR) -lfreeimage
 
-_DEPS = FreeImage.h Vector.h
+_DEPS = FreeImage.h Sampler.h Camera.h Sphere.h Triangle.h Raytracer.h Film.h Parser.h Scene.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 _OBJ = Main.o
@@ -19,13 +19,13 @@ OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 BIN = $(BDIR)/main
 TBIN = $(BDIR)/test
 
-all: $(BIN) $(TBIN)
+all: $(TBIN) $(BIN)
+
+$(TBIN): $(TDIR)/Raytrace.t.cpp $(DEPS)
+	$(CC) -o $@ $< $(CFLAGS) $(LDFLAGS) -lgtest -lgtest_main
 
 $(BIN): $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
-
-$(TBIN): $(TDIR)/Raytrace.t.cpp
-	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS) -lgtest -lgtest_main
 
 $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
