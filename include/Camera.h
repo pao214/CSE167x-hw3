@@ -41,6 +41,7 @@ public:
         this->invh = 1.0f/height;
     }
 
+    // FIXME: Do we really need fovx, fovy
     void setCamera(const glm::vec3& lookfrom, const glm::vec3& lookat, const glm::vec3& up, float fovy)
     {
         this->lookfrom = lookfrom;
@@ -48,8 +49,8 @@ public:
         this->up = up;
         this->fovx = 2.0f*std::atan((std::tan(fovy/2.0f)*width)/height);
         this->fovy = fovy;
-        tanx = glm::tan(this->fovx/2.0f);
-        tany = glm::tan(this->fovy/2.0f);
+        this->tanx = glm::tan(this->fovx/2.0f);
+        this->tany = glm::tan(this->fovy/2.0f);
     }
 
     // Operations
