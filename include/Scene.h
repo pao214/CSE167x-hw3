@@ -68,7 +68,7 @@ public:
         glm::vec3 color;
 
         // Loop through all the samples.
-        while (!sampler.generateSample(sample))
+        while (sampler.generateSample(sample))
         {
             camera.generateRay(sample, ray);
             raytracer.trace(ray, color);

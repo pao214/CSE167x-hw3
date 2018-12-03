@@ -33,4 +33,5 @@ $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS)
 .PHONY: clean
 
 clean:
+	rm -fr $(BDIR)/test.dSYM
 	rm -f $(ODIR)/* $(BDIR)/*

@@ -36,9 +36,10 @@ public:
     void commit(int x, int y, glm::vec3 color)
     {
         int index = x+y*width;
-        pixels[3*index] = color[0];
-        pixels[3*index+1] = color[1];
-        pixels[3*index+2] = color[2];
+        auto convertRange = [] (float f) { return static_cast<uint8_t>(f == 1.0f ? 255 : f*256.0f); };
+        pixels[3*index+2] = convertRange(color[0]);
+        pixels[3*index+1] = convertRange(color[1]);
+        pixels[3*index] = convertRange(color[2]);
         std::cerr << (100.*index)/(width*height) << "% done\r";
     }
 

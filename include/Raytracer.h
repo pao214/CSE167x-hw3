@@ -65,6 +65,7 @@ public:
             return;
         }
 
+        // Color red otherwise.
         color = glm::vec3(1.0f, .0f, .0f);
     }
 };
