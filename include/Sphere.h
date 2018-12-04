@@ -16,9 +16,9 @@ public:
     // Operations
     bool intersect(const Ray& ray, float& t) const
     {
-        float a = glm::dot(ray.dir, ray.dir);
-        float b = 2.0f*glm::dot(ray.dir, ray.point-center);
-        float c = glm::dot(ray.point-center, ray.point-center)-radius*radius;
+        float a = glm::dot(ray.getDir(), ray.getDir());
+        float b = 2.0f*glm::dot(ray.getDir(), ray.getPoint()-center);
+        float c = glm::dot(ray.getPoint()-center, ray.getPoint()-center)-radius*radius;
         float disc = b*b-4*a*c;
 
         if (disc < 0.0f)
@@ -35,11 +35,11 @@ public:
         if (less > 0.0f)
         {
             t = less;
-            return true;
+            return ray.inRange(t);
         }
 
         // Only one positive root.
         t = more;
-        return true;
+        return ray.inRange(t);
     }
 };

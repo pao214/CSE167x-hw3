@@ -38,12 +38,12 @@ TEST(CameraTest, TestRayGeneration)
         glm::vec2 sample(60.0f, 40.0f);
         Ray ray;
         camera.generateRay(sample, ray);
-        ASSERT_NEAR(ray.point[0], lookfrom[0], 1e-6);
-        ASSERT_NEAR(ray.point[1], lookfrom[1], 1e-6);
-        ASSERT_NEAR(ray.point[2], lookfrom[2], 1e-6);
-        ASSERT_NEAR(ray.dir[0], 3.0f/5, 1e-6);
-        ASSERT_NEAR(ray.dir[1], .0f, 1e-6);
-        ASSERT_NEAR(ray.dir[2], -4.0f/5, 1e-6);
+        ASSERT_NEAR(ray.getPoint()[0], lookfrom[0], 1e-6);
+        ASSERT_NEAR(ray.getPoint()[1], lookfrom[1], 1e-6);
+        ASSERT_NEAR(ray.getPoint()[2], lookfrom[2], 1e-6);
+        ASSERT_NEAR(ray.getDir()[0], 3.0f/5, 1e-6);
+        ASSERT_NEAR(ray.getDir()[1], .0f, 1e-6);
+        ASSERT_NEAR(ray.getDir()[2], -4.0f/5, 1e-6);
     }
 
     // Test case #2 -x
@@ -51,12 +51,12 @@ TEST(CameraTest, TestRayGeneration)
         glm::vec2 sample(.0f, 40.0f);
         Ray ray;
         camera.generateRay(sample, ray);
-        ASSERT_NEAR(ray.point[0], lookfrom[0], 1e-6);
-        ASSERT_NEAR(ray.point[1], lookfrom[1], 1e-6);
-        ASSERT_NEAR(ray.point[2], lookfrom[2], 1e-6);
-        ASSERT_NEAR(ray.dir[0], -3.0f/5, 1e-6);
-        ASSERT_NEAR(ray.dir[1], .0f, 1e-6);
-        ASSERT_NEAR(ray.dir[2], -4.0f/5, 1e-6);
+        ASSERT_NEAR(ray.getPoint()[0], lookfrom[0], 1e-6);
+        ASSERT_NEAR(ray.getPoint()[1], lookfrom[1], 1e-6);
+        ASSERT_NEAR(ray.getPoint()[2], lookfrom[2], 1e-6);
+        ASSERT_NEAR(ray.getDir()[0], -3.0f/5, 1e-6);
+        ASSERT_NEAR(ray.getDir()[1], .0f, 1e-6);
+        ASSERT_NEAR(ray.getDir()[2], -4.0f/5, 1e-6);
     }
 
     // Test case #3 +y
@@ -64,12 +64,12 @@ TEST(CameraTest, TestRayGeneration)
         glm::vec2 sample(30.0f, 80.0f);
         Ray ray;
         camera.generateRay(sample, ray);
-        ASSERT_NEAR(ray.point[0], lookfrom[0], 1e-6);
-        ASSERT_NEAR(ray.point[1], lookfrom[1], 1e-6);
-        ASSERT_NEAR(ray.point[2], lookfrom[2], 1e-6);
-        ASSERT_NEAR(ray.dir[0], .0f, 1e-6);
-        ASSERT_NEAR(ray.dir[1], 1.0f/glm::sqrt(2), 1e-6);
-        ASSERT_NEAR(ray.dir[2], -1.0f/glm::sqrt(2), 1e-6);
+        ASSERT_NEAR(ray.getPoint()[0], lookfrom[0], 1e-6);
+        ASSERT_NEAR(ray.getPoint()[1], lookfrom[1], 1e-6);
+        ASSERT_NEAR(ray.getPoint()[2], lookfrom[2], 1e-6);
+        ASSERT_NEAR(ray.getDir()[0], .0f, 1e-6);
+        ASSERT_NEAR(ray.getDir()[1], 1.0f/glm::sqrt(2), 1e-6);
+        ASSERT_NEAR(ray.getDir()[2], -1.0f/glm::sqrt(2), 1e-6);
     }
 
     // Test case #4 -y
@@ -77,12 +77,12 @@ TEST(CameraTest, TestRayGeneration)
         glm::vec2 sample(30.0f, .0f);
         Ray ray;
         camera.generateRay(sample, ray);
-        ASSERT_NEAR(ray.point[0], lookfrom[0], 1e-6);
-        ASSERT_NEAR(ray.point[1], lookfrom[1], 1e-6);
-        ASSERT_NEAR(ray.point[2], lookfrom[2], 1e-6);
-        ASSERT_NEAR(ray.dir[0], .0f, 1e-6);
-        ASSERT_NEAR(ray.dir[1], -1.0f/glm::sqrt(2), 1e-6);
-        ASSERT_NEAR(ray.dir[2], -1.0f/glm::sqrt(2), 1e-6);
+        ASSERT_NEAR(ray.getPoint()[0], lookfrom[0], 1e-6);
+        ASSERT_NEAR(ray.getPoint()[1], lookfrom[1], 1e-6);
+        ASSERT_NEAR(ray.getPoint()[2], lookfrom[2], 1e-6);
+        ASSERT_NEAR(ray.getDir()[0], .0f, 1e-6);
+        ASSERT_NEAR(ray.getDir()[1], -1.0f/glm::sqrt(2), 1e-6);
+        ASSERT_NEAR(ray.getDir()[2], -1.0f/glm::sqrt(2), 1e-6);
     }
 
     // Test case #5 +x+y
@@ -90,12 +90,12 @@ TEST(CameraTest, TestRayGeneration)
         glm::vec2 sample(60.0f, 80.0f);
         Ray ray;
         camera.generateRay(sample, ray);
-        ASSERT_NEAR(ray.point[0], lookfrom[0], 1e-6);
-        ASSERT_NEAR(ray.point[1], lookfrom[1], 1e-6);
-        ASSERT_NEAR(ray.point[2], lookfrom[2], 1e-6);
-        ASSERT_NEAR(ray.dir[0], 3.0f/glm::sqrt(41), 1e-6);
-        ASSERT_NEAR(ray.dir[1], 4.0f/glm::sqrt(41), 1e-6);
-        ASSERT_NEAR(ray.dir[2], -4.0f/glm::sqrt(41), 1e-6);
+        ASSERT_NEAR(ray.getPoint()[0], lookfrom[0], 1e-6);
+        ASSERT_NEAR(ray.getPoint()[1], lookfrom[1], 1e-6);
+        ASSERT_NEAR(ray.getPoint()[2], lookfrom[2], 1e-6);
+        ASSERT_NEAR(ray.getDir()[0], 3.0f/glm::sqrt(41), 1e-6);
+        ASSERT_NEAR(ray.getDir()[1], 4.0f/glm::sqrt(41), 1e-6);
+        ASSERT_NEAR(ray.getDir()[2], -4.0f/glm::sqrt(41), 1e-6);
     }
 
     // Test case #6 -x-y
@@ -103,12 +103,12 @@ TEST(CameraTest, TestRayGeneration)
         glm::vec2 sample(.0f, .0f);
         Ray ray;
         camera.generateRay(sample, ray);
-        ASSERT_NEAR(ray.point[0], lookfrom[0], 1e-6);
-        ASSERT_NEAR(ray.point[1], lookfrom[1], 1e-6);
-        ASSERT_NEAR(ray.point[2], lookfrom[2], 1e-6);
-        ASSERT_NEAR(ray.dir[0], -3.0f/glm::sqrt(41), 1e-6);
-        ASSERT_NEAR(ray.dir[1], -4.0f/glm::sqrt(41), 1e-6);
-        ASSERT_NEAR(ray.dir[2], -4.0f/glm::sqrt(41), 1e-6);
+        ASSERT_NEAR(ray.getPoint()[0], lookfrom[0], 1e-6);
+        ASSERT_NEAR(ray.getPoint()[1], lookfrom[1], 1e-6);
+        ASSERT_NEAR(ray.getPoint()[2], lookfrom[2], 1e-6);
+        ASSERT_NEAR(ray.getDir()[0], -3.0f/glm::sqrt(41), 1e-6);
+        ASSERT_NEAR(ray.getDir()[1], -4.0f/glm::sqrt(41), 1e-6);
+        ASSERT_NEAR(ray.getDir()[2], -4.0f/glm::sqrt(41), 1e-6);
     }
 
     // Test case #7 +x-y
@@ -116,12 +116,12 @@ TEST(CameraTest, TestRayGeneration)
         glm::vec2 sample(60.0f, .0f);
         Ray ray;
         camera.generateRay(sample, ray);
-        ASSERT_NEAR(ray.point[0], lookfrom[0], 1e-6);
-        ASSERT_NEAR(ray.point[1], lookfrom[1], 1e-6);
-        ASSERT_NEAR(ray.point[2], lookfrom[2], 1e-6);
-        ASSERT_NEAR(ray.dir[0], 3.0f/glm::sqrt(41), 1e-6);
-        ASSERT_NEAR(ray.dir[1], -4.0f/glm::sqrt(41), 1e-6);
-        ASSERT_NEAR(ray.dir[2], -4.0f/glm::sqrt(41), 1e-6);
+        ASSERT_NEAR(ray.getPoint()[0], lookfrom[0], 1e-6);
+        ASSERT_NEAR(ray.getPoint()[1], lookfrom[1], 1e-6);
+        ASSERT_NEAR(ray.getPoint()[2], lookfrom[2], 1e-6);
+        ASSERT_NEAR(ray.getDir()[0], 3.0f/glm::sqrt(41), 1e-6);
+        ASSERT_NEAR(ray.getDir()[1], -4.0f/glm::sqrt(41), 1e-6);
+        ASSERT_NEAR(ray.getDir()[2], -4.0f/glm::sqrt(41), 1e-6);
     }
 
     // Test case #8 -x+y
@@ -129,12 +129,12 @@ TEST(CameraTest, TestRayGeneration)
         glm::vec2 sample(.0f, 80.0f);
         Ray ray;
         camera.generateRay(sample, ray);
-        ASSERT_NEAR(ray.point[0], lookfrom[0], 1e-6);
-        ASSERT_NEAR(ray.point[1], lookfrom[1], 1e-6);
-        ASSERT_NEAR(ray.point[2], lookfrom[2], 1e-6);
-        ASSERT_NEAR(ray.dir[0], -3.0f/glm::sqrt(41), 1e-6);
-        ASSERT_NEAR(ray.dir[1], 4.0f/glm::sqrt(41), 1e-6);
-        ASSERT_NEAR(ray.dir[2], -4.0f/glm::sqrt(41), 1e-6);
+        ASSERT_NEAR(ray.getPoint()[0], lookfrom[0], 1e-6);
+        ASSERT_NEAR(ray.getPoint()[1], lookfrom[1], 1e-6);
+        ASSERT_NEAR(ray.getPoint()[2], lookfrom[2], 1e-6);
+        ASSERT_NEAR(ray.getDir()[0], -3.0f/glm::sqrt(41), 1e-6);
+        ASSERT_NEAR(ray.getDir()[1], 4.0f/glm::sqrt(41), 1e-6);
+        ASSERT_NEAR(ray.getDir()[2], -4.0f/glm::sqrt(41), 1e-6);
     }
 
     // Test case #9 0x0y
@@ -142,12 +142,12 @@ TEST(CameraTest, TestRayGeneration)
         glm::vec2 sample(30.0f, 40.0f);
         Ray ray;
         camera.generateRay(sample, ray);
-        ASSERT_NEAR(ray.point[0], lookfrom[0], 1e-6);
-        ASSERT_NEAR(ray.point[1], lookfrom[1], 1e-6);
-        ASSERT_NEAR(ray.point[2], lookfrom[2], 1e-6);
-        ASSERT_NEAR(ray.dir[0], .0f, 1e-6);
-        ASSERT_NEAR(ray.dir[1], .0f, 1e-6);
-        ASSERT_NEAR(ray.dir[2], -1.0f, 1e-6);
+        ASSERT_NEAR(ray.getPoint()[0], lookfrom[0], 1e-6);
+        ASSERT_NEAR(ray.getPoint()[1], lookfrom[1], 1e-6);
+        ASSERT_NEAR(ray.getPoint()[2], lookfrom[2], 1e-6);
+        ASSERT_NEAR(ray.getDir()[0], .0f, 1e-6);
+        ASSERT_NEAR(ray.getDir()[1], .0f, 1e-6);
+        ASSERT_NEAR(ray.getDir()[2], -1.0f, 1e-6);
     }
 }
 

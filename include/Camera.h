@@ -65,7 +65,6 @@ public:
         glm::vec3 v = glm::cross(w, u);
 
         // Return the output.
-        ray.point = lookfrom;
-        ray.dir = glm::normalize(alpha*u+beta*v-w);
+        new(&ray) Ray(lookfrom, alpha*u+beta*v-w);
     }
 };

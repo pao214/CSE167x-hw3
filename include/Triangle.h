@@ -1,24 +1,25 @@
 #pragma once
 
 #include "General.h"
+#include "Normal.h"
 
 struct Triangle
 {
 private:
     // Members
     const glm::vec3 A, B, C;
-    const glm::vec3 normal;
+    const Normal normal;
 
 public:
     // Constructor
     Triangle(const glm::vec3& A, const glm::vec3 B, const glm::vec3& C):
         A(A), B(B), C(C),
-        normal(glm::normalize(glm::cross(B-A, C-A))) {}
+        normal(glm::cross(B-A, C-A)) {}
 
     // Operations
     bool intersect(const Ray& ray, float& t) const
     {
-        float den = glm::dot(ray.dir, normal);
+        float den = glm::dot(ray.getDir(), normal.get());
 
         if (glm::abs(den) < 10e-6)
         // Ray parallel to surface.
@@ -27,8 +28,8 @@ public:
         }
 
         // Hit point.
-        t = (glm::dot(A, normal)-glm::dot(ray.point, normal))/den;
-        glm::vec3 point = ray.point+t*ray.dir;
+        t = (glm::dot(A, normal.get())-glm::dot(ray.getPoint(), normal.get()))/den;
+        glm::vec3 point = ray.getPoint()+t*ray.getDir();
 
         // Linear equations' coefficients.
         float a1 = B[0]-A[0];
@@ -44,6 +45,6 @@ public:
         float gamma = (c2*a1-c1*a2)*invden;
         float alpha = 1.0f-beta-gamma;
         auto inRange = [] (float val) { return 0.0f <= val && val <= 1.0f; };
-        return inRange(alpha) && inRange(beta) && inRange(gamma);
+        return ray.inRange(t) && inRange(alpha) && inRange(beta) && inRange(gamma);
     }
 };
