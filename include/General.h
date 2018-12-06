@@ -5,6 +5,7 @@
 #include <vector>
 #include <sstream>
 #include <limits>
+#include <memory>
 
 // GLM libraries
 #ifndef GLM_FORCE_RADIANS

@@ -2,7 +2,9 @@
 
 #include "Sphere.h"
 #include "Triangle.h"
+#include "Light.h"
 
+// FIXME: Modify shared pointers to use unique pointers.
 struct Raytracer
 {
 private:
@@ -10,6 +12,7 @@ private:
     std::vector<Sphere> spheres;
     std::vector<glm::vec3> vertices;
     std::vector<Triangle> triangles;
+    std::vector<std::shared_ptr<Light>> lights;
 
     bool intersect(const Ray& ray)
     {
@@ -53,6 +56,16 @@ public:
     void addTriangle(int A, int B, int C)
     {
         triangles.push_back(Triangle{vertices[A], vertices[B], vertices[C]});
+    }
+
+    void addDirLight(const glm::vec3& dir, const glm::vec3& color)
+    {
+        lights.push_back(std::shared_ptr<Light>(new DirLight(dir, color)));
+    }
+
+    void addPointLight(const glm::vec3& point, const glm::vec3& color)
+    {
+        lights.push_back(std::shared_ptr<Light>(new PointLight(point, color)));
     }
 
     // Operations

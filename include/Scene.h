@@ -60,6 +60,16 @@ public:
         raytracer.addTriangle(A, B, C);
     }
 
+    void addDirLight(const glm::vec3& dir, const glm::vec3& color)
+    {
+        raytracer.addDirLight(dir, color);
+    }
+
+    void addPointLight(const glm::vec3& point, const glm::vec3& color)
+    {
+        raytracer.addPointLight(point, color);
+    }
+
     // Operations
     void render()
     {

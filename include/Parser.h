@@ -97,6 +97,22 @@ inline void Parser::parse(const std::string& inputFilename)
             pargv >> A >> B >> C;
             scene.addTriangle(A, B, C);
         }
+        else if (cmd == "directional")
+        {
+            glm::vec3 dir, color;
+            pargv
+                >> dir.x >> dir.y >> dir.z
+                >> color.x >> color.y >> color.z;
+            scene.addDirLight(dir, color);
+        }
+        else if (cmd == "point")
+        {
+            glm::vec3 point, color;
+            pargv
+                >> point.x >> point.y >> point.z
+                >> color.x >> color.y >> color.z;
+            scene.addPointLight(point, color);
+        }
     }
 
     scene.render();
