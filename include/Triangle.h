@@ -2,8 +2,9 @@
 
 #include "General.h"
 #include "Normal.h"
+#include "Shape.h"
 
-struct Triangle
+struct Triangle : public Shape
 {
 private:
     // Members
@@ -17,7 +18,7 @@ public:
         normal(glm::cross(B-A, C-A)) {}
 
     // Operations
-    bool intersect(const Ray& ray, float& t) const
+    bool intersect(const Ray& ray, float& t) const final
     {
         float den = glm::dot(ray.getDir(), normal.get());
 

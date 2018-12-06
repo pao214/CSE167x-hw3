@@ -2,24 +2,24 @@
 
 #include "Sphere.h"
 #include "Triangle.h"
-#include "Light.h"
+#include "DirLight.h"
+#include "PointLight.h"
 
 // FIXME: Modify shared pointers to use unique pointers.
 struct Raytracer
 {
 private:
     int maxDepth;
-    std::vector<Sphere> spheres;
     std::vector<glm::vec3> vertices;
-    std::vector<Triangle> triangles;
+    std::vector<std::shared_ptr<Shape>> shapes;
     std::vector<std::shared_ptr<Light>> lights;
 
     bool intersect(const Ray& ray)
     {
         float t;
-        for (const auto& sphere: spheres)
+        for (const auto& shape: shapes)
         {
-            if (sphere.intersect(ray, t))
+            if (shape->intersect(ray, t))
             {
                 return true;
             }
@@ -40,7 +40,7 @@ public:
 
     void addSphere(const glm::vec3& center, float radius)
     {
-        spheres.push_back(Sphere{center, radius});
+        shapes.push_back(std::make_shared<Sphere>(center, radius));
     }
 
     void setMaxVerts(int maxVerts)
@@ -55,17 +55,17 @@ public:
 
     void addTriangle(int A, int B, int C)
     {
-        triangles.push_back(Triangle{vertices[A], vertices[B], vertices[C]});
+        shapes.push_back(std::make_shared<Triangle>(vertices[A], vertices[B], vertices[C]));
     }
 
     void addDirLight(const glm::vec3& dir, const glm::vec3& color)
     {
-        lights.push_back(std::shared_ptr<Light>(new DirLight(dir, color)));
+        lights.push_back(std::make_shared<DirLight>(dir, color));
     }
 
     void addPointLight(const glm::vec3& point, const glm::vec3& color)
     {
-        lights.push_back(std::shared_ptr<Light>(new PointLight(point, color)));
+        lights.push_back(std::make_shared<PointLight>(point, color));
     }
 
     // Operations

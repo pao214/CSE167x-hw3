@@ -1,8 +1,9 @@
 #pragma once
 
 #include "General.h"
+#include "Shape.h"
 
-struct Sphere
+struct Sphere : public Shape
 {
 private:
     // Members
@@ -14,7 +15,7 @@ public:
     Sphere(const glm::vec3& center, float radius): center(center), radius(radius) {}
 
     // Operations
-    bool intersect(const Ray& ray, float& t) const
+    bool intersect(const Ray& ray, float& t) const final
     {
         float a = glm::dot(ray.getDir(), ray.getDir());
         float b = 2.0f*glm::dot(ray.getDir(), ray.getPoint()-center);
