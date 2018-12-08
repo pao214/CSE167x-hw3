@@ -33,7 +33,7 @@ public:
     }
 
     // Operations
-    void commit(int x, int y, glm::vec3 color)
+    void commit(int x, int y, const glm::vec3& color)
     {
         int index = x+y*width;
         auto convertRange = [] (float f) { return static_cast<uint8_t>(f == 1.0f ? 255 : f*256.0f); };

@@ -1,26 +1,20 @@
 #pragma once
 
 #include "General.h"
-#include "Normal.h"
-#include "Shape.h"
+#include "Primitive.h"
 
-struct Triangle : public Shape
+struct Triangle : public Primitive
 {
 private:
     // Members
     const glm::vec3 A, B, C;
-    const Normal normal;
+    const glm::vec3 normal;
 
-public:
-    // Constructor
-    Triangle(const glm::vec3& A, const glm::vec3 B, const glm::vec3& C):
-        A(A), B(B), C(C),
-        normal(glm::cross(B-A, C-A)) {}
-
+protected:
     // Operations
-    bool intersect(const Ray& ray, float& t) const final
+    bool intersectV(const Ray& ray, LocalGeo* localGeoP) const final
     {
-        float den = glm::dot(ray.getDir(), normal.get());
+        float den = glm::dot(ray.getDir(), normal);
 
         if (glm::abs(den) < 10e-6)
         // Ray parallel to surface.
@@ -29,7 +23,7 @@ public:
         }
 
         // Hit point.
-        t = (glm::dot(A, normal.get())-glm::dot(ray.getPoint(), normal.get()))/den;
+        float t = (glm::dot(A, normal)-glm::dot(ray.getPoint(), normal))/den;
         glm::vec3 point = ray.getPoint()+t*ray.getDir();
 
         // Linear equations' coefficients.
@@ -48,4 +42,9 @@ public:
         auto inRange = [] (float val) { return 0.0f <= val && val <= 1.0f; };
         return ray.inRange(t) && inRange(alpha) && inRange(beta) && inRange(gamma);
     }
+
+public:
+    // Constructor
+    Triangle(const glm::vec3& A, const glm::vec3 B, const glm::vec3& C, const glm::mat4& objToWorld=glm::mat4(1.0f)):
+        Primitive(objToWorld), A(A), B(B), C(C), normal(glm::normalize(glm::cross(B-A, C-A))) {}
 };

@@ -1,21 +1,18 @@
 #pragma once
 
 #include "General.h"
-#include "Shape.h"
+#include "Primitive.h"
 
-struct Sphere : public Shape
+struct Sphere : public Primitive
 {
 private:
     // Members
     const glm::vec3 center;
     const float radius;
 
-public:
-    // Constructor
-    Sphere(const glm::vec3& center, float radius): center(center), radius(radius) {}
-
+protected:
     // Operations
-    bool intersect(const Ray& ray, float& t) const final
+    bool intersectV(const Ray& ray, LocalGeo* localGeoP) const final
     {
         float a = glm::dot(ray.getDir(), ray.getDir());
         float b = 2.0f*glm::dot(ray.getDir(), ray.getPoint()-center);
@@ -35,12 +32,19 @@ public:
         // Both roots positive.
         if (less > 0.0f)
         {
-            t = less;
-            return ray.inRange(t);
+            glm::vec3 point{ray.getPoint()+less*ray.getDir()};
+            new(localGeoP) LocalGeo(point, point-center);
+            return ray.inRange(less);
         }
 
         // Only one positive root.
-        t = more;
-        return ray.inRange(t);
+        glm::vec3 point{ray.getPoint()+more*ray.getDir()};
+        new(localGeoP) LocalGeo(point, point-center);
+        return ray.inRange(more);
     }
+
+public:
+    // Constructor
+    Sphere(const glm::vec3& center, float radius, const glm::mat4& objToWorld=glm::mat4(1.0f)):
+        Primitive(objToWorld), center(center), radius(radius) {}
 };

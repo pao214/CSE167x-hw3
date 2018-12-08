@@ -11,21 +11,28 @@ struct Raytracer
 private:
     int maxDepth;
     std::vector<glm::vec3> vertices;
-    std::vector<std::shared_ptr<Shape>> shapes;
+    std::vector<std::shared_ptr<Primitive>> primitives;
     std::vector<std::shared_ptr<Light>> lights;
+    glm::vec3 ambient;
 
-    bool intersect(const Ray& ray)
+protected:
+    bool intersect(const Ray& ray, LocalGeo* localGeoP, std::shared_ptr<Primitive>* primitiveP)
     {
-        float t;
-        for (const auto& shape: shapes)
+        for (const auto& primitive: primitives)
         {
-            if (shape->intersect(ray, t))
+            if (primitive->intersect(ray, localGeoP))
             {
+                new(primitiveP) std::shared_ptr<Primitive>(primitive);
                 return true;
             }
         }
 
         return false;
+    }
+
+    glm::vec3 shade(const LocalGeo& localGeo, const Material& material, const Ray& lightRay, const glm::vec3& lightColor)
+    {
+        return lightColor;
     }
 
 public:
@@ -40,7 +47,7 @@ public:
 
     void addSphere(const glm::vec3& center, float radius)
     {
-        shapes.push_back(std::make_shared<Sphere>(center, radius));
+        primitives.push_back(std::make_shared<Sphere>(center, radius));
     }
 
     void setMaxVerts(int maxVerts)
@@ -55,7 +62,7 @@ public:
 
     void addTriangle(int A, int B, int C)
     {
-        shapes.push_back(std::make_shared<Triangle>(vertices[A], vertices[B], vertices[C]));
+        primitives.push_back(std::make_shared<Triangle>(vertices[A], vertices[B], vertices[C]));
     }
 
     void addDirLight(const glm::vec3& dir, const glm::vec3& color)
@@ -69,16 +76,38 @@ public:
     }
 
     // Operations
-    void trace(const Ray& ray, glm::vec3& color)
+    void trace(const Ray& ray, glm::vec3* colorP)
     {
+        LocalGeo localGeo;
+        std::shared_ptr<Primitive> primitive;
+
         // Color black if there is no intersection.
-        if (!intersect(ray))
+        if (!intersect(ray, &localGeo, &primitive))
         {
-            color = glm::vec3(.0f, .0f, .0f);
+            new(colorP) glm::vec3(.0f, .0f, .0f);
             return;
         }
 
-        // Color red otherwise.
-        color = glm::vec3(1.0f, .0f, .0f);
+        // Color the pixel.
+        Material material;
+        primitive->getMaterial(&material);
+        glm::vec3 color{material.ambient+material.emission};
+
+        Ray lightRay;
+        glm::vec3 lightColor;
+        LocalGeo lightGeo;
+        for (const auto& light: lights)
+        {
+            light->generateLightRay(localGeo, &lightRay, &lightColor);
+
+            // Shade only if not blocked.
+            if (!primitive->intersect(lightRay, &lightGeo))
+            {
+                color += shade(localGeo, material, lightRay, lightColor);
+            }
+        }
+
+        // Return the color.
+        new(colorP) glm::vec3(color);
     }
 };

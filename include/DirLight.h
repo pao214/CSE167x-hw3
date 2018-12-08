@@ -18,12 +18,12 @@ public:
     DirLight(const glm::vec3& dir, const glm::vec3& color): dir(glm::normalize(dir)), color(color) {}
 
     // Operations
-    void generateLightRay(const LocalGeo& local, Ray& ray, glm::vec3& color) const final
+    void generateLightRay(const LocalGeo& localGeo, Ray* rayP, glm::vec3* colorP) const final
     {
         // Return the ray after slight movement.
-        new(&ray) Ray(local.point, dir, 1e-6f);
+        new(rayP) Ray(localGeo.getPoint(), dir, 1e-6f);
 
         // Return color.
-        new(&color) glm::vec3(color.x, color.y, color.z);
+        new(colorP) glm::vec3(this->color);
     }
 };

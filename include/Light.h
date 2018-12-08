@@ -12,5 +12,5 @@ public:
     virtual ~Light() {};
 
     // Operations
-    virtual void generateLightRay(const LocalGeo& local, Ray& ray, glm::vec3& color) const = 0;
+    virtual void generateLightRay(const LocalGeo& localGeo, Ray* rayP, glm::vec3* colorP) const = 0;
 };

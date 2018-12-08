@@ -26,11 +26,10 @@ public:
     }
 
     // Operations
-    bool generateSample(glm::vec2& sample)
+    bool generateSample(glm::vec2* sampleP)
     {
         if (index == width*height) return false;
-        sample[0] = .5f+index%width;
-        sample[1] = .5f+index/width;
+        new(sampleP) glm::vec2(.5f+index%width, .5f+index/width);
         index++;
         return true;
     }

@@ -15,12 +15,12 @@ public:
     PointLight(const glm::vec3& point, const glm::vec3& color): point(point), color(color) {}
 
     // Operations
-    void generateLightRay(const LocalGeo& local, Ray& ray, glm::vec3& color) const final
+    void generateLightRay(const LocalGeo& localGeo, Ray* rayP, glm::vec3* colorP) const final
     {
         // Return ray after slight movement.
-        new(&ray) Ray(local.point, point-local.point, 1e-6f);
+        new(rayP) Ray(localGeo.getPoint(), point-localGeo.getPoint(), 1e-6f);
 
         // Return color.
-        new(&color) glm::vec3(color.x, color.y, color.z); 
+        new(colorP) glm::vec3(this->color); 
     }
 };
