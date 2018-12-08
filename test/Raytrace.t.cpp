@@ -145,6 +145,12 @@ INSTANTIATE_TEST_CASE_P(
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(5.0f, .0f, -4.0f)},
             false,
             LocalGeo{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))}
+        ),
+        std::make_tuple(
+            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f},
+            Ray{glm::vec3(.0f, .0f, .0f), glm::vec3(.0f, .0f, 1.0f)},
+            true,
+            LocalGeo{glm::vec3(.0f, .0f, 3.0f), glm::normalize(glm::vec3(.0f, .0f, 1.0f))}
         )
     )
 );
@@ -193,47 +199,35 @@ INSTANTIATE_TEST_CASE_P(
                 glm::vec3(1.0f/3, 1.0f/3, 1.0f/3),
                 glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))
             }
+        ),
+        std::make_tuple(
+            Triangle{
+                glm::vec3(1.0f, .0f, .0f),
+                glm::vec3(.0f, 1.0f, .0f),
+                glm::vec3(.0f, .0f, 1.0f)
+            },
+            Ray{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(.4f, .4f, .2f))},
+            true,
+            LocalGeo{
+                glm::vec3(.4f, .4f, .2f),
+                glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))
+            }
+        ),
+        std::make_tuple(
+            Triangle{
+                glm::vec3(1.0f, .0f, .0f),
+                glm::vec3(.0f, 1.0f, .0f),
+                glm::vec3(.0f, .0f, 1.0f)
+            },
+            Ray{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(1.4f, .4f, -0.8f))},
+            false,
+            LocalGeo{
+                glm::vec3(.0f, .0f, .0f),
+                glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))
+            }
         )
     )
 );
-
-TEST(TriangleTest, TestIntersect)
-{
-    {
-        Triangle triangle{
-            glm::vec3(1.0f, .0f, .0f),
-            glm::vec3(.0f, 1.0f, .0f),
-            glm::vec3(.0f, .0f, 1.0f)
-        };
-        // Ray ray{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))};
-        // float t;
-        // ASSERT_TRUE(triangle.intersect(ray, t));
-        // ASSERT_NEAR(t, 1.0f/glm::sqrt(3.0f), 1e-6);
-    }
-
-    {
-        Triangle triangle{
-            glm::vec3(1.0f, .0f, .0f),
-            glm::vec3(.0f, 1.0f, .0f),
-            glm::vec3(.0f, .0f, 1.0f)
-        };
-        // Ray ray{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(.4f, .4f, .2f))};
-        // float t;
-        // ASSERT_TRUE(triangle.intersect(ray, t));
-        // ASSERT_NEAR(t, .6f, 1e-6);
-    }
-
-    {
-        Triangle triangle{
-            glm::vec3(1.0f, .0f, .0f),
-            glm::vec3(.0f, 1.0f, .0f),
-            glm::vec3(.0f, .0f, 1.0f)
-        };
-        // Ray ray{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(1.4f, .4f, -0.8f))};
-        // float t;
-        // ASSERT_FALSE(triangle.intersect(ray, t));
-    }
-}
 
 TEST(RaytracerTest, TestIntersection)
 {
