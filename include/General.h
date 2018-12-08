@@ -6,6 +6,7 @@
 #include <sstream>
 #include <limits>
 #include <memory>
+#include <array>
 
 // GLM libraries
 #ifndef GLM_FORCE_RADIANS

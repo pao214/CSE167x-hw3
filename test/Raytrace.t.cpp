@@ -8,7 +8,7 @@
 #include "Raytracer.h"
 
 // FIXME: Add support for different camera configrations.
-struct CameraTest : public ::testing::Test
+struct CameraTest : public ::testing::TestWithParam<std::pair<glm::vec2, glm::vec3>>
 {
 protected:
     Camera camera;
@@ -18,7 +18,10 @@ protected:
     glm::vec3 up;
     float fovy;
 
-    CameraTest(): width(60), height(80), lookfrom(.0f, .0f, 1.0f), lookat(.0f, .0f, .0f), up(.0f, 1.0f, .0f), fovy(glm::radians(90.0f))
+    CameraTest():
+        width(60), height(80),
+        lookfrom(.0f, .0f, 1.0f), lookat(.0f, .0f, .0f), up(.0f, 1.0f, .0f),
+        fovy(glm::radians(90.0f))
     {
         camera.setSize(width, height);
         camera.setCamera(lookfrom, lookat, up, fovy);
@@ -37,62 +40,27 @@ protected:
     }
 };
 
-TEST_F(CameraTest, TestRayGeneration)
+TEST_P(CameraTest, GenerateRay)
 {
-    // Test case #1 +x
-    {
-        glm::vec2 sample(60.0f, 40.0f);
-        runTestCase(sample, glm::normalize(glm::vec3{3.0f, .0f, -4.0f}));
-    }
-
-    // Test case #2 -x
-    {
-        glm::vec2 sample(.0f, 40.0f);
-        runTestCase(sample, glm::normalize(glm::vec3(-3.0f, .0f, -4.0f)));
-    }
-
-    // Test case #3 +y
-    {
-        glm::vec2 sample(30.0f, 80.0f);
-        runTestCase(sample, glm::normalize(glm::vec3(.0f, 1.0f, -1.0f)));
-    }
-
-    // Test case #4 -y
-    {
-        glm::vec2 sample(30.0f, .0f);
-        runTestCase(sample, glm::normalize(glm::vec3(.0f, -1.0f, -1.0f)));
-    }
-
-    // Test case #5 +x+y
-    {
-        glm::vec2 sample(60.0f, 80.0f);
-        runTestCase(sample, glm::normalize(glm::vec3(3.0f, 4.0f, -4.0f)));
-    }
-
-    // Test case #6 -x-y
-    {
-        glm::vec2 sample(.0f, .0f);
-        runTestCase(sample, glm::normalize(glm::vec3(-3.0f, -4.0f, -4.0f)));
-    }
-
-    // Test case #7 +x-y
-    {
-        glm::vec2 sample(60.0f, .0f);
-        runTestCase(sample, glm::normalize(glm::vec3(3.0f, -4.0f, -4.0f)));
-    }
-
-    // Test case #8 -x+y
-    {
-        glm::vec2 sample(.0f, 80.0f);
-        runTestCase(sample, glm::normalize(glm::vec3(-3.0f, 4.0f, -4.0f)));
-    }
-
-    // Test case #9 0x0y
-    {
-        glm::vec2 sample(30.0f, 40.0f);
-        runTestCase(sample, glm::normalize(glm::vec3(.0f, .0f, -1.0f)));
-    }
+    const auto& param = GetParam();
+    runTestCase(param.first, glm::normalize(param.second));
 }
+
+INSTANTIATE_TEST_CASE_P(
+    TestRayGeneration,
+    CameraTest,
+    ::testing::Values(
+        std::make_pair(glm::vec2{60.0f, 40.0f}, glm::vec3{3.0f, .0f, -4.0f}),
+        std::make_pair(glm::vec2{.0f, 40.0f}, glm::vec3{-3.0f, .0f, -4.0f}),
+        std::make_pair(glm::vec2{30.0f, 80.0f}, glm::vec3{.0f, 1.0f, -1.0f}),
+        std::make_pair(glm::vec2{30.0f, .0f}, glm::vec3{.0f, -1.0f, -1.0f}),
+        std::make_pair(glm::vec2{60.0f, 80.0f}, glm::vec3{3.0f, 4.0f, -4.0f}),
+        std::make_pair(glm::vec2{.0f, .0f}, glm::vec3{-3.0f, -4.0f, -4.0f}),
+        std::make_pair(glm::vec2{60.0f, .0f}, glm::vec3{3.0f, -4.0f, -4.0f}),
+        std::make_pair(glm::vec2{.0f, 80.0f}, glm::vec3{-3.0f, 4.0f, -4.0f}),
+        std::make_pair(glm::vec2{30.0f, 40.0f}, glm::vec3{.0f, .0f, -1.0f})
+    )
+);
 
 TEST(SamplerTest, TestSamples)
 {
@@ -109,13 +77,14 @@ TEST(SamplerTest, TestSamples)
     }
 }
 
+// TODO: Sphere test using transformations.
 TEST(SphereTest, TestIntersect)
 {
     {
         Sphere sphere{glm::vec3(.0f, .0f, .0f), 1.0f};
         // Ray ray{glm::vec3(.0f, .0f, 2.0f), glm::vec3(.0f, .0f, -1.0f)};
-        // float t;
-        // ASSERT_TRUE(sphere.intersect(ray, t));
+        // LocalGeo localGeo;
+        // ASSERT_TRUE(sphere.intersect(ray, &localGeo));
         // ASSERT_NEAR(t, 1.0f, 1e-6);
     }
 

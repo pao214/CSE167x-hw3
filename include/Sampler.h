@@ -5,6 +5,7 @@
 /**
  * Undefined behaviour
  *  height or width is non-positive
+ * Samples are generated row wise.
  */
 struct Sampler
 {
