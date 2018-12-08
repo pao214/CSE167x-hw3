@@ -7,6 +7,7 @@
 #include <limits>
 #include <memory>
 #include <array>
+#include <functional>
 
 // GLM libraries
 #ifndef GLM_FORCE_RADIANS

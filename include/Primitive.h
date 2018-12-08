@@ -45,7 +45,7 @@ public:
     }
 
     // Operations
-    bool intersect(const Ray& ray, LocalGeo* localGeoP)
+    bool intersect(const Ray& ray, LocalGeo* localGeoP) const
     {
         // Intersect using the transformed ray.
         const float scale = glm::length(worldToObj*glm::vec4(ray.getDir(), 1.0f));

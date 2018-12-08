@@ -8,7 +8,7 @@
 #include "Raytracer.h"
 
 // FIXME: Add support for different camera configrations.
-struct CameraTest : public ::testing::TestWithParam<std::pair<glm::vec2, glm::vec3>>
+struct CameraTest : public ::testing::TestWithParam<std::tuple<glm::vec2, glm::vec3>>
 {
 protected:
     Camera camera;
@@ -26,39 +26,39 @@ protected:
         camera.setSize(width, height);
         camera.setCamera(lookfrom, lookat, up, fovy);
     }
-
-    void runTestCase(const glm::vec2& sample, const glm::vec3& dir)
-    {
-        Ray ray;
-        camera.generateRay(sample, &ray);
-        ASSERT_NEAR(ray.getPoint().x, lookfrom.x, 1e-6);
-        ASSERT_NEAR(ray.getPoint().y, lookfrom.y, 1e-6);
-        ASSERT_NEAR(ray.getPoint().z, lookfrom.z, 1e-6);
-        ASSERT_NEAR(ray.getDir().x, dir.x, 1e-6);
-        ASSERT_NEAR(ray.getDir().y, dir.y, 1e-6);
-        ASSERT_NEAR(ray.getDir().z, dir.z, 1e-6);
-    }
 };
 
 TEST_P(CameraTest, GenerateRay)
 {
     const auto& param = GetParam();
-    runTestCase(param.first, glm::normalize(param.second));
+    const auto& sample = std::get<0>(param);
+    const auto& expectedDir = glm::normalize(std::get<1>(param));
+    Ray ray;
+    camera.generateRay(sample, &ray);
+    const auto& actualPoint = ray.getPoint();
+    const auto& actualDir = ray.getDir();
+    const auto& expectedPoint = lookfrom;
+    ASSERT_NEAR(actualPoint.x, expectedPoint.x, 1e-6);
+    ASSERT_NEAR(actualPoint.y, expectedPoint.y, 1e-6);
+    ASSERT_NEAR(actualPoint.z, expectedPoint.z, 1e-6);
+    ASSERT_NEAR(actualDir.x, expectedDir.x, 1e-6);
+    ASSERT_NEAR(actualDir.y, expectedDir.y, 1e-6);
+    ASSERT_NEAR(actualDir.z, expectedDir.z, 1e-6);
 }
 
 INSTANTIATE_TEST_CASE_P(
     TestRayGeneration,
     CameraTest,
     ::testing::Values(
-        std::make_pair(glm::vec2{60.0f, 40.0f}, glm::vec3{3.0f, .0f, -4.0f}),
-        std::make_pair(glm::vec2{.0f, 40.0f}, glm::vec3{-3.0f, .0f, -4.0f}),
-        std::make_pair(glm::vec2{30.0f, 80.0f}, glm::vec3{.0f, 1.0f, -1.0f}),
-        std::make_pair(glm::vec2{30.0f, .0f}, glm::vec3{.0f, -1.0f, -1.0f}),
-        std::make_pair(glm::vec2{60.0f, 80.0f}, glm::vec3{3.0f, 4.0f, -4.0f}),
-        std::make_pair(glm::vec2{.0f, .0f}, glm::vec3{-3.0f, -4.0f, -4.0f}),
-        std::make_pair(glm::vec2{60.0f, .0f}, glm::vec3{3.0f, -4.0f, -4.0f}),
-        std::make_pair(glm::vec2{.0f, 80.0f}, glm::vec3{-3.0f, 4.0f, -4.0f}),
-        std::make_pair(glm::vec2{30.0f, 40.0f}, glm::vec3{.0f, .0f, -1.0f})
+        std::make_tuple(glm::vec2{60.0f, 40.0f}, glm::vec3{3.0f, .0f, -4.0f}),
+        std::make_tuple(glm::vec2{.0f, 40.0f}, glm::vec3{-3.0f, .0f, -4.0f}),
+        std::make_tuple(glm::vec2{30.0f, 80.0f}, glm::vec3{.0f, 1.0f, -1.0f}),
+        std::make_tuple(glm::vec2{30.0f, .0f}, glm::vec3{.0f, -1.0f, -1.0f}),
+        std::make_tuple(glm::vec2{60.0f, 80.0f}, glm::vec3{3.0f, 4.0f, -4.0f}),
+        std::make_tuple(glm::vec2{.0f, .0f}, glm::vec3{-3.0f, -4.0f, -4.0f}),
+        std::make_tuple(glm::vec2{60.0f, .0f}, glm::vec3{3.0f, -4.0f, -4.0f}),
+        std::make_tuple(glm::vec2{.0f, 80.0f}, glm::vec3{-3.0f, 4.0f, -4.0f}),
+        std::make_tuple(glm::vec2{30.0f, 40.0f}, glm::vec3{.0f, .0f, -1.0f})
     )
 );
 
@@ -78,55 +78,76 @@ TEST(SamplerTest, TestSamples)
 }
 
 // TODO: Sphere test using transformations.
-TEST(SphereTest, TestIntersect)
+struct SphereTest : public ::testing::TestWithParam<std::tuple<Sphere, Ray, bool, LocalGeo>> {};
+
+TEST_P(SphereTest, Intersect)
 {
-    {
-        Sphere sphere{glm::vec3(.0f, .0f, .0f), 1.0f};
-        // Ray ray{glm::vec3(.0f, .0f, 2.0f), glm::vec3(.0f, .0f, -1.0f)};
-        // LocalGeo localGeo;
-        // ASSERT_TRUE(sphere.intersect(ray, &localGeo));
-        // ASSERT_NEAR(t, 1.0f, 1e-6);
-    }
+    const auto& param = GetParam();
+    const auto& sphere = std::get<0>(param);
+    const auto& ray = std::get<1>(param);
+    const auto hit = std::get<2>(param);
+    const auto& expected = std::get<3>(param);
+    LocalGeo actual;
 
-    {
-        Sphere sphere{glm::vec3(.0f, .0f, .0f), 3.0f};
-        // Ray ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(3.0f/5.0f, .0f, -4.0f/5)};
-        // float t;
-        // ASSERT_TRUE(sphere.intersect(ray, t));
-        // ASSERT_NEAR(t, 1.4f, 1e-6);
-    }
+    // Check return value.
+    ASSERT_TRUE(hit == sphere.intersect(ray, &actual));
 
-    {
-        Sphere sphere{glm::vec3(.0f, .0f, .0f), 3.0f};
-        // Ray ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(-3.0f/5.0f, .0f, -4.0f/5)};
-        // float t;
-        // ASSERT_TRUE(sphere.intersect(ray, t));
-        // ASSERT_NEAR(t, 1.4f, 1e-6);
-    }
-
-    {
-        Sphere sphere{glm::vec3(.0f, .0f, .0f), 3.0f};
-        // Ray ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(.0f, -3.0f/5.0f, -4.0f/5)};
-        // float t;
-        // ASSERT_TRUE(sphere.intersect(ray, t));
-        // ASSERT_NEAR(t, 1.4f, 1e-6);
-    }
-
-    {
-        Sphere sphere{glm::vec3(.0f, .0f, .0f), 3.0f};
-        // Ray ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(.0f, 3.0f/5.0f, -4.0f/5)};
-        // float t;
-        // ASSERT_TRUE(sphere.intersect(ray, t));
-        // ASSERT_NEAR(t, 1.4f, 1e-6);
-    }
-
-    {
-        Sphere sphere{glm::vec3(.0f, .0f, .0f), 3.0f};
-        // Ray ray{glm::vec3(.0f, .0f, 4.0f), glm::normalize(glm::vec3(5.0f, .0f, -4.0f))};
-        // float t;
-        // ASSERT_FALSE(sphere.intersect(ray, t));
-    }
+    // Check intersection point.
+    if (!hit) return;
+    const auto& actualPoint = actual.getPoint();
+    const auto& actualNormal = actual.getNormal();
+    const auto& expectedPoint = expected.getPoint();
+    const auto& expectedNormal = expected.getNormal();
+    ASSERT_NEAR(actualPoint.x, expectedPoint.x, 1e-6);
+    ASSERT_NEAR(actualPoint.y, expectedPoint.y, 1e-6);
+    ASSERT_NEAR(actualPoint.z, expectedPoint.z, 1e-6);
+    ASSERT_NEAR(actualNormal.x, expectedNormal.x, 1e-6);
+    ASSERT_NEAR(actualNormal.y, expectedNormal.y, 1e-6);
+    ASSERT_NEAR(actualNormal.z, expectedNormal.z, 1e-6);
 }
+
+INSTANTIATE_TEST_CASE_P(
+    TestIntersect,
+    SphereTest,
+    ::testing::Values(
+        std::make_tuple(
+            Sphere{glm::vec3(.0f, .0f, .0f), 1.0f},
+            Ray{glm::vec3(.0f, .0f, 2.0f), glm::vec3(.0f, .0f, -1.0f)},
+            true,
+            LocalGeo{glm::vec3(.0f, .0f, 1.0f), glm::vec3(.0f, .0f, 1.0f)}
+        ),
+        std::make_tuple(
+            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f},
+            Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(3.0f, .0f, -4.0f)},
+            true,
+            LocalGeo{glm::vec3(.84f, .0f, 2.88f), glm::vec3(.84f, .0f, 2.88f)}
+        ),
+        std::make_tuple(
+            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f},
+            Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(-3.0f, .0f, -4.0f)},
+            true,
+            LocalGeo{glm::vec3(-0.84f, .0f, 2.88f), glm::vec3(-0.84f, .0f, 2.88f)}
+        ),
+        std::make_tuple(
+            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f},
+            Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(.0f, -3.0f, -4.0f)},
+            true,
+            LocalGeo{glm::vec3(.0f, -0.84f, 2.88f), glm::vec3(.0f, -0.84f, 2.88f)}
+        ),
+        std::make_tuple(
+            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f},
+            Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(.0f, 3.0f, -4.0f)},
+            true,
+            LocalGeo{glm::vec3(.0f, 0.84f, 2.88f), glm::vec3(.0f, 0.84f, 2.88f)}
+        ),
+        std::make_tuple(
+            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f},
+            Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(5.0f, .0f, -4.0f)},
+            false,
+            LocalGeo{glm::vec3(.0f, .0f, .0f), glm::vec3(.0f, .0f, .0f)}
+        )
+    )
+);
 
 TEST(TriangleTest, TestIntersect)
 {
