@@ -13,7 +13,7 @@ private:
     std::vector<glm::vec3> vertices;
     std::vector<std::shared_ptr<Primitive>> primitives;
     std::vector<std::shared_ptr<Light>> lights;
-    glm::vec3 ambient;
+    glm::vec3 attenuation, ambient;
 
 protected:
     bool intersect(const Ray& ray, LocalGeo* localGeoP, std::shared_ptr<Primitive>* primitiveP)
@@ -30,14 +30,9 @@ protected:
         return false;
     }
 
-    glm::vec3 shade(const LocalGeo& localGeo, const Material& material, const Ray& lightRay, const glm::vec3& lightColor)
-    {
-        return lightColor;
-    }
-
 public:
     // Constructor
-    Raytracer(): maxDepth(1) {}
+    Raytracer(): maxDepth(5), attenuation(1.0f, .0f, .0f), ambient(.2f) {}
 
     // Setters and getters
     void setMaxDepth(int maxDepth)
@@ -47,7 +42,7 @@ public:
 
     void addSphere(const glm::vec3& center, float radius)
     {
-        primitives.push_back(std::make_shared<Sphere>(center, radius));
+        primitives.push_back(std::make_shared<Sphere>(center, radius, ambient));
     }
 
     void setMaxVerts(int maxVerts)
@@ -62,7 +57,7 @@ public:
 
     void addTriangle(int A, int B, int C)
     {
-        primitives.push_back(std::make_shared<Triangle>(vertices[A], vertices[B], vertices[C]));
+        primitives.push_back(std::make_shared<Triangle>(vertices[A], vertices[B], vertices[C], ambient));
     }
 
     void addDirLight(const glm::vec3& dir, const glm::vec3& color)
@@ -72,7 +67,17 @@ public:
 
     void addPointLight(const glm::vec3& point, const glm::vec3& color)
     {
-        lights.push_back(std::make_shared<PointLight>(point, color));
+        lights.push_back(std::make_shared<PointLight>(point, color, attenuation));
+    }
+
+    void setAttenuation(const glm::vec3& attenuation)
+    {
+        this->attenuation = attenuation;
+    }
+
+    void setAmbient(const glm::vec3& ambient)
+    {
+        this->ambient = ambient;
     }
 
     // Operations
@@ -89,6 +94,7 @@ public:
         }
 
         // Color the pixel.
+        // ambient+emission+sum(v[i]*l[i]/atten[i]*(D*max(N.L,0)+S*max(N.H,0)^s))
         Material material;
         primitive->getMaterial(&material);
         glm::vec3 color{material.ambient+material.emission};
@@ -103,7 +109,13 @@ public:
             // Shade only if not blocked.
             if (!primitive->intersect(lightRay, &lightGeo))
             {
-                color += shade(localGeo, material, lightRay, lightColor);
+                const auto& normal = localGeo.getNormal();
+                const auto& lightDir = lightRay.getDir();
+                const auto& halfAngle = glm::normalize(lightDir-ray.getDir());
+                color += lightColor*(
+                    material.diffuse*std::max(glm::dot(normal, lightDir), .0f)+
+                    material.specular*glm::pow(std::max(glm::dot(normal, halfAngle), .0f), material.shininess)
+                );
             }
         }
 

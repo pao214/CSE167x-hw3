@@ -14,10 +14,10 @@ struct Primitive
 {
 private:
     // Members
-    glm::mat4 objToWorld, worldToObj;
-    glm::mat4 norObjToWorld, norWorldToObj;
     glm::vec3 ambient, diffuse, specular, emission;
     float shininess;
+    glm::mat4 objToWorld, worldToObj;
+    glm::mat4 norObjToWorld, norWorldToObj;
 
 protected:
     // Primitive specific logic.
@@ -25,8 +25,8 @@ protected:
 
 public:
     // Constructor
-    Primitive(const glm::mat4& objToWorld):
-        objToWorld(objToWorld), worldToObj(glm::inverse(objToWorld)),
+    Primitive(const glm::vec3& ambient, const glm::mat4& objToWorld):
+        ambient(ambient), objToWorld(objToWorld), worldToObj(glm::inverse(objToWorld)),
         norObjToWorld(glm::transpose(worldToObj)), norWorldToObj(glm::transpose(objToWorld)) {}
 
     // Base class requires a virtual destructor.

@@ -113,6 +113,18 @@ inline void Parser::parse(const std::string& inputFilename)
                 >> color.x >> color.y >> color.z;
             scene.addPointLight(point, color);
         }
+        else if (cmd == "attenuation")
+        {
+            glm::vec3 attenuation;
+            pargv >> attenuation.x >> attenuation.y >> attenuation.z;
+            scene.setAttenuation(attenuation);
+        }
+        else if (cmd == "ambient")
+        {
+            glm::vec3 ambient;
+            pargv >> ambient.x >> ambient.y >> ambient.z;
+            scene.setAmbient(ambient);
+        }
     }
 
     scene.render();

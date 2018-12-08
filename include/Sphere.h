@@ -45,6 +45,8 @@ protected:
 
 public:
     // Constructor
-    Sphere(const glm::vec3& center, float radius, const glm::mat4& objToWorld=glm::mat4(1.0f)):
-        Primitive(objToWorld), center(center), radius(radius) {}
+    Sphere(
+        const glm::vec3& center, float radius,
+        const glm::vec3& ambient=glm::vec3(.2f), const glm::mat4& objToWorld=glm::mat4(1.0f)
+    ) : Primitive(ambient, objToWorld), center(center), radius(radius) {}
 };

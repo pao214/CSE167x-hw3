@@ -70,6 +70,16 @@ public:
         raytracer.addPointLight(point, color);
     }
 
+    void setAttenuation(const glm::vec3& attenuation)
+    {
+        raytracer.setAttenuation(attenuation);
+    }
+
+    void setAmbient(const glm::vec3& ambient)
+    {
+        raytracer.setAmbient(ambient);
+    }
+
     // Operations
     void render()
     {
