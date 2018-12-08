@@ -40,6 +40,7 @@ protected:
         float gamma = (c2*a1-c1*a2)*invden;
         float alpha = 1.0f-beta-gamma;
         auto inRange = [] (float val) { return 0.0f <= val && val <= 1.0f; };
+        new(localGeoP) LocalGeo(point, normal);
         return ray.inRange(t) && inRange(alpha) && inRange(beta) && inRange(gamma);
     }
 

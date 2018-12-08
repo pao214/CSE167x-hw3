@@ -33,13 +33,13 @@ protected:
         if (less > 0.0f)
         {
             glm::vec3 point{ray.getPoint()+less*ray.getDir()};
-            new(localGeoP) LocalGeo(point, point-center);
+            new(localGeoP) LocalGeo(point, glm::normalize(point-center));
             return ray.inRange(less);
         }
 
         // Only one positive root.
         glm::vec3 point{ray.getPoint()+more*ray.getDir()};
-        new(localGeoP) LocalGeo(point, point-center);
+        new(localGeoP) LocalGeo(point, glm::normalize(point-center));
         return ray.inRange(more);
     }
 

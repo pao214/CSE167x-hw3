@@ -114,37 +114,85 @@ INSTANTIATE_TEST_CASE_P(
             Sphere{glm::vec3(.0f, .0f, .0f), 1.0f},
             Ray{glm::vec3(.0f, .0f, 2.0f), glm::vec3(.0f, .0f, -1.0f)},
             true,
-            LocalGeo{glm::vec3(.0f, .0f, 1.0f), glm::vec3(.0f, .0f, 1.0f)}
+            LocalGeo{glm::vec3(.0f, .0f, 1.0f), glm::normalize(glm::vec3(.0f, .0f, 1.0f))}
         ),
         std::make_tuple(
             Sphere{glm::vec3(.0f, .0f, .0f), 3.0f},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(3.0f, .0f, -4.0f)},
             true,
-            LocalGeo{glm::vec3(.84f, .0f, 2.88f), glm::vec3(.84f, .0f, 2.88f)}
+            LocalGeo{glm::vec3(.84f, .0f, 2.88f), glm::normalize(glm::vec3(.84f, .0f, 2.88f))}
         ),
         std::make_tuple(
             Sphere{glm::vec3(.0f, .0f, .0f), 3.0f},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(-3.0f, .0f, -4.0f)},
             true,
-            LocalGeo{glm::vec3(-0.84f, .0f, 2.88f), glm::vec3(-0.84f, .0f, 2.88f)}
+            LocalGeo{glm::vec3(-0.84f, .0f, 2.88f), glm::normalize(glm::vec3(-0.84f, .0f, 2.88f))}
         ),
         std::make_tuple(
             Sphere{glm::vec3(.0f, .0f, .0f), 3.0f},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(.0f, -3.0f, -4.0f)},
             true,
-            LocalGeo{glm::vec3(.0f, -0.84f, 2.88f), glm::vec3(.0f, -0.84f, 2.88f)}
+            LocalGeo{glm::vec3(.0f, -0.84f, 2.88f), glm::normalize(glm::vec3(.0f, -0.84f, 2.88f))}
         ),
         std::make_tuple(
             Sphere{glm::vec3(.0f, .0f, .0f), 3.0f},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(.0f, 3.0f, -4.0f)},
             true,
-            LocalGeo{glm::vec3(.0f, 0.84f, 2.88f), glm::vec3(.0f, 0.84f, 2.88f)}
+            LocalGeo{glm::vec3(.0f, 0.84f, 2.88f), glm::normalize(glm::vec3(.0f, 0.84f, 2.88f))}
         ),
         std::make_tuple(
             Sphere{glm::vec3(.0f, .0f, .0f), 3.0f},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(5.0f, .0f, -4.0f)},
             false,
-            LocalGeo{glm::vec3(.0f, .0f, .0f), glm::vec3(.0f, .0f, .0f)}
+            LocalGeo{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))}
+        )
+    )
+);
+
+struct TriangleTest : public ::testing::TestWithParam<std::tuple<Triangle, Ray, bool, LocalGeo>> {};
+
+TEST_P(TriangleTest, Intersect)
+{
+    const auto& param = GetParam();
+    const auto& triangle = std::get<0>(param);
+    const auto& ray = std::get<1>(param);
+    const auto hit = std::get<2>(param);
+    const auto& expected = std::get<3>(param);
+    LocalGeo actual;
+
+    // Check return value.
+    ASSERT_TRUE(hit == triangle.intersect(ray, &actual));
+
+    // Check intersection point.
+    if (!hit) return;
+    const auto& actualPoint = actual.getPoint();
+    const auto& actualNormal = actual.getNormal();
+    const auto& expectedPoint = expected.getPoint();
+    const auto& expectedNormal = expected.getNormal();
+    ASSERT_NEAR(actualPoint.x, expectedPoint.x, 1e-6);
+    ASSERT_NEAR(actualPoint.y, expectedPoint.y, 1e-6);
+    ASSERT_NEAR(actualPoint.z, expectedPoint.z, 1e-6);
+    ASSERT_NEAR(actualNormal.x, expectedNormal.x, 1e-6);
+    ASSERT_NEAR(actualNormal.y, expectedNormal.y, 1e-6);
+    ASSERT_NEAR(actualNormal.z, expectedNormal.z, 1e-6);
+}
+
+INSTANTIATE_TEST_CASE_P(
+    TestIntersect,
+    TriangleTest,
+    ::testing::Values(
+        std::make_tuple(
+            Triangle{
+                glm::vec3(1.0f, .0f, .0f),
+                glm::vec3(.0f, 1.0f, .0f),
+                glm::vec3(.0f, .0f, 1.0f)
+            },
+            Ray{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))},
+            true,
+            LocalGeo{
+                glm::vec3(1.0f/3, 1.0f/3, 1.0f/3),
+                glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))
+            }
         )
     )
 );
