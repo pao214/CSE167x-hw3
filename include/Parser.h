@@ -149,6 +149,10 @@ inline void Parser::parse(const std::string& inputFilename)
             pargv >> emission.x >> emission.y >> emission.z;
             scene.setEmission(emission);
         }
+        else
+        {
+            std::cerr << "Unrecognised command " << cmd << std::endl;
+        }
     }
 
     scene.render();

@@ -13,7 +13,7 @@ private:
     std::vector<glm::vec3> vertices;
     std::vector<std::shared_ptr<Primitive>> primitives;
     std::vector<std::shared_ptr<Light>> lights;
-    glm::vec3 attenuation, ambient;
+    glm::vec3 attenuation;
     Material material;
     glm::mat4 transform;
 
@@ -34,7 +34,7 @@ protected:
 
 public:
     // Constructor
-    Raytracer(): maxDepth(5), attenuation(1.0f, .0f, .0f), ambient(.2f) {}
+    Raytracer(): maxDepth(5), attenuation(1.0f, .0f, .0f) {}
 
     // Setters and getters
     void setMaxDepth(int maxDepth)
@@ -46,7 +46,7 @@ public:
     void addSphere(const glm::vec3& center, float radius)
     {
         primitives.push_back(std::make_shared<Sphere>(
-            center, radius, ambient, material, transform
+            center, radius, material, transform
         ));
     }
 
@@ -63,7 +63,7 @@ public:
     void addTriangle(int A, int B, int C)
     {
         primitives.push_back(std::make_shared<Triangle>(
-            vertices[A], vertices[B], vertices[C], ambient, material, transform
+            vertices[A], vertices[B], vertices[C], material, transform
         ));
     }
 
@@ -85,7 +85,7 @@ public:
 
     void setAmbient(const glm::vec3& ambient)
     {
-        this->ambient = ambient;
+        this->material.ambient = ambient;
     }
 
     // Material properties

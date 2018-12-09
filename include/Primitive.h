@@ -25,9 +25,8 @@ protected:
 
 public:
     // Constructor
-    Primitive(const glm::vec3& ambient, const Material& material, const glm::mat4& objToWorld):
-        ambient(ambient), material(material),
-        objToWorld(objToWorld), worldToObj(glm::inverse(objToWorld)),
+    Primitive(const Material& material, const glm::mat4& objToWorld):
+        material(material), objToWorld(objToWorld), worldToObj(glm::inverse(objToWorld)),
         norObjToWorld(glm::transpose(worldToObj)), norWorldToObj(glm::transpose(objToWorld)) {}
 
     // Base class requires a virtual destructor.

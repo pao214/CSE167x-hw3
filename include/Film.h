@@ -36,7 +36,10 @@ public:
     void commit(int x, int y, const glm::vec3& color)
     {
         int index = x+y*width;
-        auto convertRange = [] (float f) { return static_cast<uint8_t>(f == 1.0f ? 255 : f*256.0f); };
+        auto convertRange = [] (float f)
+        {
+            return static_cast<uint8_t>(f >= 1.0f ? 255 : f*256.0f);
+        };
         pixels[3*index+2] = convertRange(color[0]);
         pixels[3*index+1] = convertRange(color[1]);
         pixels[3*index] = convertRange(color[2]);
@@ -47,7 +50,9 @@ public:
     {
         // Save screenshot to file.
         FreeImage_Initialise();
-        FIBITMAP *image = FreeImage_ConvertFromRawBits(&pixels[0], width, height, width*3, 24, 0xFF0000, 0x00FF00, 0x0000FF, false);
+        FIBITMAP *image = FreeImage_ConvertFromRawBits(
+            &pixels[0], width, height, width*3, 24, 0xFF0000, 0x00FF00, 0x0000FF, false
+        );
         std::cout << "Saving image: " << outputFilename << std::endl;
         FreeImage_Save(FIF_PNG, image, outputFilename.c_str(), 0);
         FreeImage_DeInitialise();

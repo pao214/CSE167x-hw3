@@ -111,43 +111,43 @@ INSTANTIATE_TEST_CASE_P(
     SphereTest,
     ::testing::Values(
         std::make_tuple(
-            Sphere{glm::vec3(.0f, .0f, .0f), 1.0f, glm::vec3(), Material(), glm::mat4()},
+            Sphere{glm::vec3(.0f, .0f, .0f), 1.0f, Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, 2.0f), glm::vec3(.0f, .0f, -1.0f)},
             true,
             LocalGeo{glm::vec3(.0f, .0f, 1.0f), glm::normalize(glm::vec3(.0f, .0f, 1.0f))}
         ),
         std::make_tuple(
-            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, glm::vec3(), Material(), glm::mat4()},
+            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(3.0f, .0f, -4.0f)},
             true,
             LocalGeo{glm::vec3(.84f, .0f, 2.88f), glm::normalize(glm::vec3(.84f, .0f, 2.88f))}
         ),
         std::make_tuple(
-            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, glm::vec3(), Material(), glm::mat4()},
+            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(-3.0f, .0f, -4.0f)},
             true,
             LocalGeo{glm::vec3(-0.84f, .0f, 2.88f), glm::normalize(glm::vec3(-0.84f, .0f, 2.88f))}
         ),
         std::make_tuple(
-            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, glm::vec3(), Material(), glm::mat4()},
+            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(.0f, -3.0f, -4.0f)},
             true,
             LocalGeo{glm::vec3(.0f, -0.84f, 2.88f), glm::normalize(glm::vec3(.0f, -0.84f, 2.88f))}
         ),
         std::make_tuple(
-            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, glm::vec3(), Material(), glm::mat4()},
+            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(.0f, 3.0f, -4.0f)},
             true,
             LocalGeo{glm::vec3(.0f, 0.84f, 2.88f), glm::normalize(glm::vec3(.0f, 0.84f, 2.88f))}
         ),
         std::make_tuple(
-            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, glm::vec3(), Material(), glm::mat4()},
+            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(5.0f, .0f, -4.0f)},
             false,
             LocalGeo{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))}
         ),
         std::make_tuple(
-            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, glm::vec3(), Material(), glm::mat4()},
+            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, .0f), glm::vec3(.0f, .0f, 1.0f)},
             true,
             LocalGeo{glm::vec3(.0f, .0f, 3.0f), glm::normalize(glm::vec3(.0f, .0f, 1.0f))}
@@ -194,7 +194,7 @@ INSTANTIATE_TEST_CASE_P(
                 glm::vec3(1.0f, .0f, .0f),
                 glm::vec3(.0f, 1.0f, .0f),
                 glm::vec3(.0f, .0f, 1.0f),
-                glm::vec3(), Material(), glm::mat4()
+                Material(), glm::mat4()
             },
             Ray{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))},
             true,
@@ -208,7 +208,7 @@ INSTANTIATE_TEST_CASE_P(
                 glm::vec3(1.0f, .0f, .0f),
                 glm::vec3(.0f, 1.0f, .0f),
                 glm::vec3(.0f, .0f, 1.0f),
-                glm::vec3(), Material(), glm::mat4()
+                Material(), glm::mat4()
             },
             Ray{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(.4f, .4f, .2f))},
             true,
@@ -222,7 +222,7 @@ INSTANTIATE_TEST_CASE_P(
                 glm::vec3(1.0f, .0f, .0f),
                 glm::vec3(.0f, 1.0f, .0f),
                 glm::vec3(.0f, .0f, 1.0f),
-                glm::vec3(), Material(), glm::mat4()
+                Material(), glm::mat4()
             },
             Ray{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(1.4f, .4f, -0.8f))},
             false,
@@ -456,6 +456,66 @@ TEST(RaytracerTest, TestCase5)
     // Trace the color
     const Ray ray{glm::vec3(1.0f, .0f, 1.0f), glm::vec3(-1.0f, .0f, .0f)};
     const glm::vec3 expectedColor{1.0f/2, 1.0f/2, .0f};
+    glm::vec3 actualColor;
+    raytracer.trace(ray, &actualColor);
+
+    // Compare
+    ASSERT_NEAR(actualColor.x, expectedColor.x, 1e-6);
+    ASSERT_NEAR(actualColor.y, expectedColor.y, 1e-6);
+    ASSERT_NEAR(actualColor.z, expectedColor.z, 1e-6);
+}
+
+TEST(RaytracerTest, TestCase6)
+{
+    Raytracer raytracer;
+
+    // Lighting
+    raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(1.0f, 1.0f, .0f));
+    raytracer.setAttenuation(glm::vec3(1.0f, .0f, .0f));
+    raytracer.setAmbient(glm::vec3(1.0f, 1.0f, 1.0f));
+    
+    // Material
+    raytracer.setDiffuse(glm::vec3(.0f, .0f, .0f));
+    raytracer.setSpecular(glm::vec3(.0f, .0f, .0f));
+    raytracer.setShininess(2.0f);
+    raytracer.setEmission(glm::vec3(.0f, .0f, .0f));
+
+    // Geometry
+    raytracer.addSphere(glm::vec3(.0f, .0f, .0f), 1.0f);
+
+    // Trace the color
+    const Ray ray{glm::vec3(1.0f, .0f, 1.0f), glm::vec3(-1.0f, .0f, -1.0f)};
+    const glm::vec3 expectedColor{1.0f, 1.0f, 1.0f};
+    glm::vec3 actualColor;
+    raytracer.trace(ray, &actualColor);
+
+    // Compare
+    ASSERT_NEAR(actualColor.x, expectedColor.x, 1e-6);
+    ASSERT_NEAR(actualColor.y, expectedColor.y, 1e-6);
+    ASSERT_NEAR(actualColor.z, expectedColor.z, 1e-6);
+}
+
+TEST(RaytracerTest, TestCase7)
+{
+    Raytracer raytracer;
+
+    // Lighting
+    raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+    raytracer.setAttenuation(glm::vec3(1.0f, .0f, .0f));
+    raytracer.setAmbient(glm::vec3(.0f, .0f, .0f));
+    
+    // Material
+    raytracer.setDiffuse(glm::vec3(1.0f, 1.0f, 1.0f));
+    raytracer.setSpecular(glm::vec3(.0f, .0f, .0f));
+    raytracer.setShininess(1.0f);
+    raytracer.setEmission(glm::vec3(.0f, .0f, .0f));
+
+    // Geometry
+    raytracer.addSphere(glm::vec3(.0f, .0f, .0f), 1.0f);
+
+    // Trace the color
+    const Ray ray{glm::vec3(.0f, .0f, 2.0f), glm::vec3(.0f, .0f, -1.0f)};
+    const glm::vec3 expectedColor{1.0f, 1.0f, 1.0f};
     glm::vec3 actualColor;
     raytracer.trace(ray, &actualColor);
 
