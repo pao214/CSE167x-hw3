@@ -4,7 +4,9 @@
 #include "LocalGeo.h"
 #include "Ray.h"
 
-// FIXME: Attenuation.
+/**
+ * The direction of light ray is from local point towards light source.
+ */
 struct Light
 {
 public:

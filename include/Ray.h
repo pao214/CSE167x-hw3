@@ -9,6 +9,7 @@
  * Direction is always normalized.
  * Default values for t_min and t_max.
  * Represents a ray point+t*dir, where t_min <= t <= t_max.
+ * FIXME: Is t_max any useful?
  */
 struct Ray
 {

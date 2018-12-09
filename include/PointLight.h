@@ -23,9 +23,9 @@ public:
         new(rayP) Ray(localGeo.getPoint(), point-localGeo.getPoint(), 1e-6f);
 
         // Return color.
-        const auto& mag = point-localGeo.getPoint();
-        float r2 = mag.x*mag.x+mag.y*mag.y+mag.z+mag.z;
+        const auto mag = point-localGeo.getPoint();
+        float r2 = mag.x*mag.x+mag.y*mag.y+mag.z*mag.z;
         float r = glm::sqrt(r2);
-        new(colorP) glm::vec3((this->color)/(attenuation.x+attenuation.y*r+attenuation.z*r2));
+        new(colorP) glm::vec3(color/(attenuation.x+attenuation.y*r+attenuation.z*r2));
     }
 };

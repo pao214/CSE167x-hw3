@@ -3,8 +3,6 @@
 #include "General.h"
 #include "Sampler.h"
 #include "Camera.h"
-#include "Triangle.h"
-#include "Sphere.h"
 #include "Raytracer.h"
 
 // FIXME: Add support for different camera configrations.
@@ -228,6 +226,114 @@ INSTANTIATE_TEST_CASE_P(
         )
     )
 );
+
+struct LightTest : public ::testing::TestWithParam<std::tuple<std::shared_ptr<Light>, LocalGeo, Ray, glm::vec3>> {};
+
+TEST_P(LightTest, GenerateLightRay)
+{
+    const auto& param = GetParam();
+    const auto& light = std::get<0>(param);
+    const auto& localGeo = std::get<1>(param);
+    const auto& expectedRay = std::get<2>(param);
+    const auto& expectedColor = std::get<3>(param);
+    Ray actualRay;
+    glm::vec3 actualColor;
+    light->generateLightRay(localGeo, &actualRay, &actualColor);
+
+    // Compare rays.
+    const auto& actualRayPoint = actualRay.getPoint();
+    const auto& actualRayDir = actualRay.getDir();
+    const auto actualRayMin = actualRay.getMin();
+    const auto& expectedRayPoint = expectedRay.getPoint();
+    const auto& expectedRayDir = expectedRay.getDir();
+    const auto expectedRayMin = expectedRay.getMin();
+    ASSERT_NEAR(actualRayPoint.x, expectedRayPoint.x, 1e-6);
+    ASSERT_NEAR(actualRayPoint.y, expectedRayPoint.y, 1e-6);
+    ASSERT_NEAR(actualRayPoint.z, expectedRayPoint.z, 1e-6);
+    ASSERT_NEAR(actualRayDir.x, expectedRayDir.x, 1e-6);
+    ASSERT_NEAR(actualRayDir.y, expectedRayDir.y, 1e-6);
+    ASSERT_NEAR(actualRayDir.z, expectedRayDir.z, 1e-6);
+    ASSERT_NEAR(actualRayMin, expectedRayMin, 1e-6);
+
+    // Compare colors.
+    ASSERT_NEAR(actualColor.x, expectedColor.x, 1e-6);
+    ASSERT_NEAR(actualColor.y, expectedColor.y, 1e-6);
+    ASSERT_NEAR(actualColor.z, expectedColor.z, 1e-6);
+}
+
+INSTANTIATE_TEST_CASE_P(
+    TestLightRayGeneration,
+    LightTest,
+    ::testing::Values(
+        std::make_tuple(
+            std::make_shared<DirLight>(DirLight{
+                glm::vec3(-1.0f, .0f, .0f),
+                glm::vec3(1.0f, .0f, .0f)
+            }),
+            LocalGeo{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, .0f, .0f)},
+            Ray{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, .0f, .0f)},
+            glm::vec3(1.0f, .0f, .0f)
+        ),
+        std::make_tuple(
+            std::make_shared<DirLight>(DirLight{
+                glm::vec3(-1.0f, -1.0f, -1.0f),
+                glm::vec3(.5f, .5f, .5f)
+            }),
+            LocalGeo{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, .0f, .0f)},
+            Ray{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+            glm::vec3(.5f, .5f, .5f)
+        ),
+        std::make_tuple(
+            std::make_shared<PointLight>(PointLight{
+                glm::vec3(1.0f, 1.0f, 1.0f),
+                glm::vec3(1.0f, .0f, 1.0f),
+                glm::vec3(1.0f, .0f, .0f)
+            }),
+            LocalGeo{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, .0f, .0f)},
+            Ray{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+            glm::vec3(1.0f, .0f, 1.0f)
+        ),
+        std::make_tuple(
+            std::make_shared<PointLight>(PointLight{
+                glm::vec3(1.0f, 1.0f, 1.0f),
+                glm::vec3(1.0f, 1.0f, 1.0f),
+                glm::vec3(1.0f, 1.0f, 1.0f)
+            }),
+            LocalGeo{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, .0f, .0f)},
+            Ray{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+            glm::vec3(1.0f, 1.0f, 1.0f)/(1.0f+glm::sqrt(3.0f)+3.0f)
+        )
+    )
+);
+
+// struct RaytracerTest : public ::testing::TestWithParam<std::tuple<Ray, glm::vec3>>
+// {
+// protected:
+//     Raytracer raytracer;
+// };
+
+// TEST_P(RaytracerTest, Trace)
+// {
+//     // Initialize raytracer
+//     raytracer.addSphere(glm::vec3(.0f, .0f, .0f), 3.0f);
+
+//     const auto& param = GetParam();
+//     const auto& ray = std::get<0>(param);
+//     const auto& expectedColor = std::get<1>(param);
+//     glm::vec3 actualColor;
+//     raytracer.trace(ray, &actualColor);
+//     ASSERT_NEAR(actualColor.x, expectedColor.x, 1e-6);
+//     ASSERT_NEAR(actualColor.y, expectedColor.y, 1e-6);
+//     ASSERT_NEAR(actualColor.z, expectedColor.z, 1e-6);
+// }
+
+// INSTANTIATE_TEST_CASE_P(
+//     TestTrace,
+//     RaytracerTest,
+//     ::testing::Values(
+        
+//     )
+// );
 
 TEST(RaytracerTest, TestIntersection)
 {
