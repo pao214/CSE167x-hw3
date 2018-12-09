@@ -249,7 +249,7 @@ TEST_P(LightTest, GenerateLightRay)
     glm::vec3 actualColor;
     light->generateLightRay(localGeo, &actualRay, &actualColor);
 
-    // Compare rays.
+    // Compare rays
     const auto& actualRayPoint = actualRay.getPoint();
     const auto& actualRayDir = actualRay.getDir();
     const auto actualRayMin = actualRay.getMin();
@@ -264,7 +264,7 @@ TEST_P(LightTest, GenerateLightRay)
     ASSERT_NEAR(actualRayDir.z, expectedRayDir.z, 1e-6);
     ASSERT_NEAR(actualRayMin, expectedRayMin, 1e-6);
 
-    // Compare colors.
+    // Compare colors
     ASSERT_NEAR(actualColor.x, expectedColor.x, 1e-6);
     ASSERT_NEAR(actualColor.y, expectedColor.y, 1e-6);
     ASSERT_NEAR(actualColor.z, expectedColor.z, 1e-6);
@@ -315,12 +315,152 @@ INSTANTIATE_TEST_CASE_P(
     )
 );
 
-TEST(RaytracerTest, Trace)
+TEST(RaytracerTest, TestCase1)
 {
     Raytracer raytracer;
+
+    // Lighting
     raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+    raytracer.setAttenuation(glm::vec3(1.0f, .0f, .0f));
     raytracer.setAmbient(glm::vec3(.0f, .0f, .0f));
-    raytracer.addSphere(glm::vec3(1.0f, .0f, .0f), 1.0f);
-    raytracer.addSphere(glm::vec3(-1.0f, .0f, .0f), 1.0f);
-    glm::vec3 color;
+    
+    // Material
+    raytracer.setDiffuse(glm::vec3(1.0f, 1.0f, 1.0f));
+    raytracer.setSpecular(glm::vec3(.0f, .0f, .0f));
+    raytracer.setShininess(1.0f);
+    raytracer.setEmission(glm::vec3(.0f, .0f, .0f));
+
+    // Geometry
+    raytracer.addSphere(glm::vec3(.0f, .0f, .0f), 1.0f);
+
+    // Trace the color
+    const Ray ray{glm::vec3(1.0f, .0f, 1.0f/glm::sqrt(2)), glm::vec3(-1.0f, .0f, .0f)};
+    const glm::vec3 expectedColor{1.0f/glm::sqrt(2), 1.0f/glm::sqrt(2), 1.0f/glm::sqrt(2)};
+    glm::vec3 actualColor;
+    raytracer.trace(ray, &actualColor);
+
+    // Compare
+    ASSERT_NEAR(actualColor.x, expectedColor.x, 1e-6);
+    ASSERT_NEAR(actualColor.y, expectedColor.y, 1e-6);
+    ASSERT_NEAR(actualColor.z, expectedColor.z, 1e-6);
+}
+
+TEST(RaytracerTest, TestCase2)
+{
+    Raytracer raytracer;
+
+    // Lighting
+    raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(1.0f, .0f, 1.0f));
+    raytracer.setAttenuation(glm::vec3(1.0f, .0f, .0f));
+    raytracer.setAmbient(glm::vec3(.0f, .0f, .0f));
+    
+    // Material
+    raytracer.setDiffuse(glm::vec3(1.0f, 1.0f, 1.0f));
+    raytracer.setSpecular(glm::vec3(.0f, .0f, .0f));
+    raytracer.setShininess(1.0f);
+    raytracer.setEmission(glm::vec3(.0f, .0f, .0f));
+
+    // Geometry
+    raytracer.addSphere(glm::vec3(.0f, .0f, .0f), 1.0f);
+
+    // Trace the color
+    const Ray ray{glm::vec3(1.0f, .0f, 1.0f), glm::vec3(-1.0f, .0f, -1.0f)};
+    const glm::vec3 expectedColor{1.0f/glm::sqrt(2), .0f, 1.0f/glm::sqrt(2)};
+    glm::vec3 actualColor;
+    raytracer.trace(ray, &actualColor);
+
+    // Compare
+    ASSERT_NEAR(actualColor.x, expectedColor.x, 1e-6);
+    ASSERT_NEAR(actualColor.y, expectedColor.y, 1e-6);
+    ASSERT_NEAR(actualColor.z, expectedColor.z, 1e-6);
+}
+
+TEST(RaytracerTest, TestCase3)
+{
+    Raytracer raytracer;
+
+    // Lighting
+    raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+    raytracer.setAttenuation(glm::vec3(1.0f, .0f, .0f));
+    raytracer.setAmbient(glm::vec3(.0f, .0f, .0f));
+    
+    // Material
+    raytracer.setDiffuse(glm::vec3(1.0f, 1.0f, 1.0f));
+    raytracer.setSpecular(glm::vec3(.0f, .0f, .0f));
+    raytracer.setShininess(1.0f);
+    raytracer.setEmission(glm::vec3(.0f, .0f, .0f));
+
+    // Geometry
+    raytracer.addSphere(glm::vec3(.0f, .0f, .0f), 1.0f);
+
+    // Trace the color
+    const Ray ray{glm::vec3(.0f, .0f, -2.0f), glm::vec3(.0f, .0f, 1.0f)};
+    const glm::vec3 expectedColor{.0f, .0f, .0f};
+    glm::vec3 actualColor;
+    raytracer.trace(ray, &actualColor);
+
+    // Compare
+    ASSERT_NEAR(actualColor.x, expectedColor.x, 1e-6);
+    ASSERT_NEAR(actualColor.y, expectedColor.y, 1e-6);
+    ASSERT_NEAR(actualColor.z, expectedColor.z, 1e-6);
+}
+
+TEST(RaytracerTest, TestCase4)
+{
+    Raytracer raytracer;
+
+    // Lighting
+    raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(.0f, 1.0f, 1.0f));
+    raytracer.setAttenuation(glm::vec3(1.0f, .0f, .0f));
+    raytracer.setAmbient(glm::vec3(.0f, .0f, .0f));
+    
+    // Material
+    raytracer.setDiffuse(glm::vec3(.0f, .0f, .0f));
+    raytracer.setSpecular(glm::vec3(1.0f, 1.0f, 1.0f));
+    raytracer.setShininess(1.0f);
+    raytracer.setEmission(glm::vec3(.0f, .0f, .0f));
+
+    // Geometry
+    raytracer.addSphere(glm::vec3(.0f, .0f, .0f), 1.0f);
+
+    // Trace the color
+    const Ray ray{glm::vec3(1.0f, .0f, 1.0f/glm::sqrt(2)), glm::vec3(-1.0f, .0f, .0f)};
+    const glm::vec3 expectedColor{.0f, 1.0f, 1.0f};
+    glm::vec3 actualColor;
+    raytracer.trace(ray, &actualColor);
+
+    // Compare
+    ASSERT_NEAR(actualColor.x, expectedColor.x, 1e-6);
+    ASSERT_NEAR(actualColor.y, expectedColor.y, 1e-6);
+    ASSERT_NEAR(actualColor.z, expectedColor.z, 1e-6);
+}
+
+TEST(RaytracerTest, TestCase5)
+{
+    Raytracer raytracer;
+
+    // Lighting
+    raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(1.0f, 1.0f, .0f));
+    raytracer.setAttenuation(glm::vec3(1.0f, .0f, .0f));
+    raytracer.setAmbient(glm::vec3(.0f, .0f, .0f));
+    
+    // Material
+    raytracer.setDiffuse(glm::vec3(.0f, .0f, .0f));
+    raytracer.setSpecular(glm::vec3(1.0f, 1.0f, 1.0f));
+    raytracer.setShininess(2.0f);
+    raytracer.setEmission(glm::vec3(.0f, .0f, .0f));
+
+    // Geometry
+    raytracer.addSphere(glm::vec3(.0f, .0f, .0f), 1.0f);
+
+    // Trace the color
+    const Ray ray{glm::vec3(1.0f, .0f, 1.0f), glm::vec3(-1.0f, .0f, .0f)};
+    const glm::vec3 expectedColor{1.0f/2, 1.0f/2, .0f};
+    glm::vec3 actualColor;
+    raytracer.trace(ray, &actualColor);
+
+    // Compare
+    ASSERT_NEAR(actualColor.x, expectedColor.x, 1e-6);
+    ASSERT_NEAR(actualColor.y, expectedColor.y, 1e-6);
+    ASSERT_NEAR(actualColor.z, expectedColor.z, 1e-6);
 }
