@@ -10,6 +10,7 @@
  *  lookfrom and lookat are the same point
  *  you're looking in the same direction as up vector
  * Latency Sensitive: generateRay
+ * FIXME: Simplify mathematical expressions.
  */
 struct Camera
 {

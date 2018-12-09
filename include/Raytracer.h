@@ -18,18 +18,25 @@ private:
     glm::mat4 transform;
 
 protected:
-    bool intersect(const Ray& ray, LocalGeo* localGeoP, std::shared_ptr<Primitive>* primitiveP)
+    bool intersect(const Ray& ray, LocalGeo* localGeoP=nullptr, std::shared_ptr<Primitive>* primitiveP=nullptr)
     {
+        float tHitMin = std::numeric_limits<float>::infinity();
+        float tHit;
+        bool hit = false;
+        LocalGeo localGeo;
+
         for (const auto& primitive: primitives)
         {
-            if (primitive->intersect(ray, localGeoP))
+            if (primitive->intersect(ray, &tHit, &localGeo) && (tHit < tHitMin))
             {
-                new(primitiveP) std::shared_ptr<Primitive>(primitive);
-                return true;
+                hit = true;
+                tHitMin = tHit;
+                if (localGeoP) new(localGeoP) LocalGeo(localGeo);
+                if (primitiveP) new(primitiveP) std::shared_ptr<Primitive>(primitive);
             }
         }
 
-        return false;
+        return hit;
     }
 
 public:
@@ -122,6 +129,7 @@ public:
             return;
         }
 
+        // std::cerr << "Here" << std::endl;
         // Color the pixel.
         // ambient+emission+sum(v[i]*l[i]/atten[i]*(D*max(N.L,0)+S*max(N.H,0)^s))
         Material material;
@@ -136,7 +144,7 @@ public:
             light->generateLightRay(localGeo, &lightRay, &lightColor);
 
             // Shade only if not blocked.
-            if (!primitive->intersect(lightRay, &lightGeo))
+            if (!intersect(lightRay))
             {
                 const auto& normal = localGeo.getNormal();
                 const auto& lightDir = lightRay.getDir();

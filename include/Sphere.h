@@ -12,7 +12,7 @@ private:
 
 protected:
     // Operations
-    bool intersectV(const Ray& ray, LocalGeo* localGeoP) const final
+    bool intersectV(const Ray& ray, float* tHitP, LocalGeo* localGeoP) const final
     {
         float a = glm::dot(ray.getDir(), ray.getDir());
         float b = 2.0f*glm::dot(ray.getDir(), ray.getPoint()-center);
@@ -33,12 +33,14 @@ protected:
         if (less > 0.0f)
         {
             glm::vec3 point{ray.getPoint()+less*ray.getDir()};
+            new(tHitP) float(less);
             new(localGeoP) LocalGeo(point, glm::normalize(point-center));
             return ray.inRange(less);
         }
 
         // Only one positive root.
         glm::vec3 point{ray.getPoint()+more*ray.getDir()};
+        new(tHitP) float(more);
         new(localGeoP) LocalGeo(point, glm::normalize(point-center));
         return ray.inRange(more);
     }

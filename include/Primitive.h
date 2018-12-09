@@ -21,7 +21,7 @@ private:
 
 protected:
     // Primitive specific logic.
-    virtual bool intersectV(const Ray& ray, LocalGeo* localGeoP) const = 0;
+    virtual bool intersectV(const Ray& ray, float* tHitP, LocalGeo* localGeoP) const = 0;
 
 public:
     // Constructor
@@ -39,7 +39,7 @@ public:
     }
 
     // Operations
-    bool intersect(const Ray& ray, LocalGeo* localGeoP) const
+    bool intersect(const Ray& ray, float* tHitP, LocalGeo* localGeoP) const
     {
         // Intersect using the transformed ray.
         const float scale = glm::length(worldToObj*glm::vec4(ray.getDir(), 1.0f));
@@ -51,7 +51,7 @@ public:
         };
 
         // Intersect using the primitive specific logic.
-        if (!intersectV(objRay, localGeoP))
+        if (!intersectV(objRay, tHitP, localGeoP))
         {
             return false;
         }

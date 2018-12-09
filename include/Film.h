@@ -43,7 +43,7 @@ public:
         pixels[3*index+2] = convertRange(color[0]);
         pixels[3*index+1] = convertRange(color[1]);
         pixels[3*index] = convertRange(color[2]);
-        std::cerr << (100.*index)/(width*height) << "% done\r";
+        std::cerr << "> " << (100.*index)/(width*height) << "% done\r";
     }
 
     void saveImage()

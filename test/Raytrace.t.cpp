@@ -77,23 +77,27 @@ TEST(SamplerTest, TestSamples)
 
 // TODO: Sphere test using transformations.
 struct SphereTest : public ::testing::TestWithParam<std::tuple<
-    Sphere, Ray, bool, LocalGeo
+    Sphere, Ray, bool, float, LocalGeo
 >> {};
 
+// FIXME: Check the value of t as well.
 TEST_P(SphereTest, Intersect)
 {
     const auto& param = GetParam();
     const auto& sphere = std::get<0>(param);
     const auto& ray = std::get<1>(param);
     const auto hit = std::get<2>(param);
-    const auto& expected = std::get<3>(param);
+    const auto expectedT = std::get<3>(param);
+    const auto& expected = std::get<4>(param);
     LocalGeo actual;
+    float actualT;
 
     // Check return value.
-    ASSERT_TRUE(hit == sphere.intersect(ray, &actual));
+    ASSERT_TRUE(hit == sphere.intersect(ray, &actualT, &actual));
 
     // Check intersection point.
     if (!hit) return;
+    ASSERT_NEAR(actualT, expectedT, 1e-6);
     const auto& actualPoint = actual.getPoint();
     const auto& actualNormal = actual.getNormal();
     const auto& expectedPoint = expected.getPoint();
@@ -114,65 +118,76 @@ INSTANTIATE_TEST_CASE_P(
             Sphere{glm::vec3(.0f, .0f, .0f), 1.0f, Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, 2.0f), glm::vec3(.0f, .0f, -1.0f)},
             true,
+            1.0f,
             LocalGeo{glm::vec3(.0f, .0f, 1.0f), glm::normalize(glm::vec3(.0f, .0f, 1.0f))}
         ),
         std::make_tuple(
             Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(3.0f, .0f, -4.0f)},
             true,
+            1.4f,
             LocalGeo{glm::vec3(.84f, .0f, 2.88f), glm::normalize(glm::vec3(.84f, .0f, 2.88f))}
         ),
         std::make_tuple(
             Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(-3.0f, .0f, -4.0f)},
             true,
+            1.4f,
             LocalGeo{glm::vec3(-0.84f, .0f, 2.88f), glm::normalize(glm::vec3(-0.84f, .0f, 2.88f))}
         ),
         std::make_tuple(
             Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(.0f, -3.0f, -4.0f)},
             true,
+            1.4f,
             LocalGeo{glm::vec3(.0f, -0.84f, 2.88f), glm::normalize(glm::vec3(.0f, -0.84f, 2.88f))}
         ),
         std::make_tuple(
             Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(.0f, 3.0f, -4.0f)},
             true,
+            1.4f,
             LocalGeo{glm::vec3(.0f, 0.84f, 2.88f), glm::normalize(glm::vec3(.0f, 0.84f, 2.88f))}
         ),
         std::make_tuple(
             Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(5.0f, .0f, -4.0f)},
             false,
+            1.0f,
             LocalGeo{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))}
         ),
         std::make_tuple(
             Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, .0f), glm::vec3(.0f, .0f, 1.0f)},
             true,
+            3.0f,
             LocalGeo{glm::vec3(.0f, .0f, 3.0f), glm::normalize(glm::vec3(.0f, .0f, 1.0f))}
         )
     )
 );
 
 struct TriangleTest : public ::testing::TestWithParam<std::tuple<
-    Triangle, Ray, bool, LocalGeo
+    Triangle, Ray, bool, float, LocalGeo
 >> {};
 
+// FIXME: Check the value of t as well.
 TEST_P(TriangleTest, Intersect)
 {
     const auto& param = GetParam();
     const auto& triangle = std::get<0>(param);
     const auto& ray = std::get<1>(param);
     const auto hit = std::get<2>(param);
-    const auto& expected = std::get<3>(param);
+    const auto expectedT = std::get<3>(param);
+    const auto& expected = std::get<4>(param);
     LocalGeo actual;
+    float actualT;
 
     // Check return value.
-    ASSERT_TRUE(hit == triangle.intersect(ray, &actual));
+    ASSERT_TRUE(hit == triangle.intersect(ray, &actualT, &actual));
 
     // Check intersection point.
     if (!hit) return;
+    ASSERT_NEAR(actualT, expectedT, 1e-6);
     const auto& actualPoint = actual.getPoint();
     const auto& actualNormal = actual.getNormal();
     const auto& expectedPoint = expected.getPoint();
@@ -198,6 +213,7 @@ INSTANTIATE_TEST_CASE_P(
             },
             Ray{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))},
             true,
+            1.0f/glm::sqrt(3),
             LocalGeo{
                 glm::vec3(1.0f/3, 1.0f/3, 1.0f/3),
                 glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))
@@ -212,6 +228,7 @@ INSTANTIATE_TEST_CASE_P(
             },
             Ray{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(.4f, .4f, .2f))},
             true,
+            .6f,
             LocalGeo{
                 glm::vec3(.4f, .4f, .2f),
                 glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))
@@ -226,9 +243,25 @@ INSTANTIATE_TEST_CASE_P(
             },
             Ray{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(1.4f, .4f, -0.8f))},
             false,
+            1.0f,
             LocalGeo{
                 glm::vec3(.0f, .0f, .0f),
                 glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))
+            }
+        ),
+        std::make_tuple(
+            Triangle{
+                glm::vec3(-1.0f, -1.0f, -1.0f),
+                glm::vec3(1.0f, -1.0f, 1.0f),
+                glm::vec3(-1.0f, -1.0f, 1.0f),
+                Material(), glm::mat4()
+            },
+            Ray{glm::vec3(-2.0f, -2.0f, 2.0f), glm::normalize(glm::vec3(2.0f, 2.0f, -2.0f))},
+            true,
+            glm::sqrt(3),
+            LocalGeo{
+                glm::vec3(-1.0f, -1.0f, 1.0f),
+                glm::normalize(glm::vec3(.0f, -1.0f, .0f))
             }
         )
     )
