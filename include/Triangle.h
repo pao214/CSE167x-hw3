@@ -48,7 +48,8 @@ public:
     // Constructor
     Triangle(
         const glm::vec3& A, const glm::vec3 B, const glm::vec3& C,
-        const glm::vec3& ambient=glm::vec3(.2f), const glm::mat4& objToWorld=glm::mat4(1.0f)
-    ) : Primitive(ambient, objToWorld), A(A), B(B), C(C),
+        const glm::vec3& ambient, const Material& material,
+        const glm::mat4& objToWorld
+    ) : Primitive(ambient, material, objToWorld), A(A), B(B), C(C),
         normal(glm::normalize(glm::cross(B-A, C-A))) {}
 };

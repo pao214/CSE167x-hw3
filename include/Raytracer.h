@@ -14,6 +14,8 @@ private:
     std::vector<std::shared_ptr<Primitive>> primitives;
     std::vector<std::shared_ptr<Light>> lights;
     glm::vec3 attenuation, ambient;
+    Material material;
+    glm::mat4 transform;
 
 protected:
     bool intersect(const Ray& ray, LocalGeo* localGeoP, std::shared_ptr<Primitive>* primitiveP)
@@ -40,9 +42,12 @@ public:
         this->maxDepth = maxDepth;
     }
 
+    // Geometry
     void addSphere(const glm::vec3& center, float radius)
     {
-        primitives.push_back(std::make_shared<Sphere>(center, radius, ambient));
+        primitives.push_back(std::make_shared<Sphere>(
+            center, radius, ambient, material, transform
+        ));
     }
 
     void setMaxVerts(int maxVerts)
@@ -57,9 +62,12 @@ public:
 
     void addTriangle(int A, int B, int C)
     {
-        primitives.push_back(std::make_shared<Triangle>(vertices[A], vertices[B], vertices[C], ambient));
+        primitives.push_back(std::make_shared<Triangle>(
+            vertices[A], vertices[B], vertices[C], ambient, material, transform
+        ));
     }
 
+    // Lighting
     void addDirLight(const glm::vec3& dir, const glm::vec3& color)
     {
         lights.push_back(std::make_shared<DirLight>(dir, color));
@@ -78,6 +86,27 @@ public:
     void setAmbient(const glm::vec3& ambient)
     {
         this->ambient = ambient;
+    }
+
+    // Material properties
+    void setDiffuse(const glm::vec3& diffuse)
+    {
+        this->material.diffuse = diffuse;
+    }
+
+    void setSpecular(const glm::vec3& specular)
+    {
+        this->material.specular = specular;
+    }
+
+    void setShininess(float shininess)
+    {
+        this->material.shininess = shininess;
+    }
+
+    void setEmission(const glm::vec3& emission)
+    {
+        this->material.emission = emission;
     }
 
     // Operations

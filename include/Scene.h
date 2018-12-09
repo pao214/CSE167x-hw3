@@ -40,6 +40,7 @@ public:
         camera.setCamera(lookfrom, lookat, up, fovy);
     }
 
+    // Geometry
     void addSphere(const glm::vec3& center, float radius)
     {
         raytracer.addSphere(center, radius);
@@ -60,6 +61,7 @@ public:
         raytracer.addTriangle(A, B, C);
     }
 
+    // Lighting
     void addDirLight(const glm::vec3& dir, const glm::vec3& color)
     {
         raytracer.addDirLight(dir, color);
@@ -78,6 +80,27 @@ public:
     void setAmbient(const glm::vec3& ambient)
     {
         raytracer.setAmbient(ambient);
+    }
+
+    // Material properties
+    void setDiffuse(const glm::vec3& diffuse)
+    {
+        raytracer.setDiffuse(diffuse);
+    }
+
+    void setSpecular(const glm::vec3& specular)
+    {
+        raytracer.setSpecular(specular);
+    }
+
+    void setShininess(float shininess)
+    {
+        raytracer.setShininess(shininess);
+    }
+
+    void setEmission(const glm::vec3& emission)
+    {
+        raytracer.setEmission(emission);
     }
 
     // Operations

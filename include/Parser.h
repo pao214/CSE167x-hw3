@@ -125,6 +125,30 @@ inline void Parser::parse(const std::string& inputFilename)
             pargv >> ambient.x >> ambient.y >> ambient.z;
             scene.setAmbient(ambient);
         }
+        else if (cmd == "diffuse")
+        {
+            glm::vec3 diffuse;
+            pargv >> diffuse.x >> diffuse.y >> diffuse.z;
+            scene.setDiffuse(diffuse);
+        }
+        else if (cmd == "specular")
+        {
+            glm::vec3 specular;
+            pargv >> specular.x >> specular.y >> specular.z;
+            scene.setSpecular(specular);
+        }
+        else if (cmd == "shininess")
+        {
+            float shininess;
+            pargv >> shininess;
+            scene.setShininess(shininess);
+        }
+        else if(cmd == "emission")
+        {
+            glm::vec3 emission;
+            pargv >> emission.x >> emission.y >> emission.z;
+            scene.setEmission(emission);
+        }
     }
 
     scene.render();

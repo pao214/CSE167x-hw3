@@ -76,7 +76,9 @@ TEST(SamplerTest, TestSamples)
 }
 
 // TODO: Sphere test using transformations.
-struct SphereTest : public ::testing::TestWithParam<std::tuple<Sphere, Ray, bool, LocalGeo>> {};
+struct SphereTest : public ::testing::TestWithParam<std::tuple<
+    Sphere, Ray, bool, LocalGeo
+>> {};
 
 TEST_P(SphereTest, Intersect)
 {
@@ -109,43 +111,43 @@ INSTANTIATE_TEST_CASE_P(
     SphereTest,
     ::testing::Values(
         std::make_tuple(
-            Sphere{glm::vec3(.0f, .0f, .0f), 1.0f},
+            Sphere{glm::vec3(.0f, .0f, .0f), 1.0f, glm::vec3(), Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, 2.0f), glm::vec3(.0f, .0f, -1.0f)},
             true,
             LocalGeo{glm::vec3(.0f, .0f, 1.0f), glm::normalize(glm::vec3(.0f, .0f, 1.0f))}
         ),
         std::make_tuple(
-            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f},
+            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, glm::vec3(), Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(3.0f, .0f, -4.0f)},
             true,
             LocalGeo{glm::vec3(.84f, .0f, 2.88f), glm::normalize(glm::vec3(.84f, .0f, 2.88f))}
         ),
         std::make_tuple(
-            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f},
+            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, glm::vec3(), Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(-3.0f, .0f, -4.0f)},
             true,
             LocalGeo{glm::vec3(-0.84f, .0f, 2.88f), glm::normalize(glm::vec3(-0.84f, .0f, 2.88f))}
         ),
         std::make_tuple(
-            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f},
+            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, glm::vec3(), Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(.0f, -3.0f, -4.0f)},
             true,
             LocalGeo{glm::vec3(.0f, -0.84f, 2.88f), glm::normalize(glm::vec3(.0f, -0.84f, 2.88f))}
         ),
         std::make_tuple(
-            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f},
+            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, glm::vec3(), Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(.0f, 3.0f, -4.0f)},
             true,
             LocalGeo{glm::vec3(.0f, 0.84f, 2.88f), glm::normalize(glm::vec3(.0f, 0.84f, 2.88f))}
         ),
         std::make_tuple(
-            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f},
+            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, glm::vec3(), Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, 4.0f), glm::vec3(5.0f, .0f, -4.0f)},
             false,
             LocalGeo{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))}
         ),
         std::make_tuple(
-            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f},
+            Sphere{glm::vec3(.0f, .0f, .0f), 3.0f, glm::vec3(), Material(), glm::mat4()},
             Ray{glm::vec3(.0f, .0f, .0f), glm::vec3(.0f, .0f, 1.0f)},
             true,
             LocalGeo{glm::vec3(.0f, .0f, 3.0f), glm::normalize(glm::vec3(.0f, .0f, 1.0f))}
@@ -153,7 +155,9 @@ INSTANTIATE_TEST_CASE_P(
     )
 );
 
-struct TriangleTest : public ::testing::TestWithParam<std::tuple<Triangle, Ray, bool, LocalGeo>> {};
+struct TriangleTest : public ::testing::TestWithParam<std::tuple<
+    Triangle, Ray, bool, LocalGeo
+>> {};
 
 TEST_P(TriangleTest, Intersect)
 {
@@ -189,7 +193,8 @@ INSTANTIATE_TEST_CASE_P(
             Triangle{
                 glm::vec3(1.0f, .0f, .0f),
                 glm::vec3(.0f, 1.0f, .0f),
-                glm::vec3(.0f, .0f, 1.0f)
+                glm::vec3(.0f, .0f, 1.0f),
+                glm::vec3(), Material(), glm::mat4()
             },
             Ray{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))},
             true,
@@ -202,7 +207,8 @@ INSTANTIATE_TEST_CASE_P(
             Triangle{
                 glm::vec3(1.0f, .0f, .0f),
                 glm::vec3(.0f, 1.0f, .0f),
-                glm::vec3(.0f, .0f, 1.0f)
+                glm::vec3(.0f, .0f, 1.0f),
+                glm::vec3(), Material(), glm::mat4()
             },
             Ray{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(.4f, .4f, .2f))},
             true,
@@ -215,7 +221,8 @@ INSTANTIATE_TEST_CASE_P(
             Triangle{
                 glm::vec3(1.0f, .0f, .0f),
                 glm::vec3(.0f, 1.0f, .0f),
-                glm::vec3(.0f, .0f, 1.0f)
+                glm::vec3(.0f, .0f, 1.0f),
+                glm::vec3(), Material(), glm::mat4()
             },
             Ray{glm::vec3(.0f, .0f, .0f), glm::normalize(glm::vec3(1.4f, .4f, -0.8f))},
             false,
@@ -227,7 +234,9 @@ INSTANTIATE_TEST_CASE_P(
     )
 );
 
-struct LightTest : public ::testing::TestWithParam<std::tuple<std::shared_ptr<Light>, LocalGeo, Ray, glm::vec3>> {};
+struct LightTest : public ::testing::TestWithParam<std::tuple<
+    std::shared_ptr<Light>, LocalGeo, Ray, glm::vec3
+>> {};
 
 TEST_P(LightTest, GenerateLightRay)
 {
@@ -306,77 +315,12 @@ INSTANTIATE_TEST_CASE_P(
     )
 );
 
-// struct RaytracerTest : public ::testing::TestWithParam<std::tuple<Ray, glm::vec3>>
-// {
-// protected:
-//     Raytracer raytracer;
-// };
-
-// TEST_P(RaytracerTest, Trace)
-// {
-//     // Initialize raytracer
-//     raytracer.addSphere(glm::vec3(.0f, .0f, .0f), 3.0f);
-
-//     const auto& param = GetParam();
-//     const auto& ray = std::get<0>(param);
-//     const auto& expectedColor = std::get<1>(param);
-//     glm::vec3 actualColor;
-//     raytracer.trace(ray, &actualColor);
-//     ASSERT_NEAR(actualColor.x, expectedColor.x, 1e-6);
-//     ASSERT_NEAR(actualColor.y, expectedColor.y, 1e-6);
-//     ASSERT_NEAR(actualColor.z, expectedColor.z, 1e-6);
-// }
-
-// INSTANTIATE_TEST_CASE_P(
-//     TestTrace,
-//     RaytracerTest,
-//     ::testing::Values(
-        
-//     )
-// );
-
-TEST(RaytracerTest, TestIntersection)
+TEST(RaytracerTest, Trace)
 {
     Raytracer raytracer;
+    raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+    raytracer.setAmbient(glm::vec3(.0f, .0f, .0f));
     raytracer.addSphere(glm::vec3(1.0f, .0f, .0f), 1.0f);
     raytracer.addSphere(glm::vec3(-1.0f, .0f, .0f), 1.0f);
     glm::vec3 color;
-
-    // Test case #1 (.0f, .0f, 1.0f), (1.0f, .0f, -1.0f)
-    {
-        Ray ray{glm::vec3(.0f, .0f, 1.0f), glm::normalize(glm::vec3(1.0f, .0f, -1.0f))};
-        // raytracer.trace(ray, color);
-        // ASSERT_NEAR(color[0], 1.0f, 1e-6);
-        // ASSERT_NEAR(color[1], .0f, 1e-6);
-        // ASSERT_NEAR(color[2], .0f, 1e-6);
-    }
-
-    // Test case #2 (.0f, .0f, 1.0f), (-1.0f, .0f, -1.0f)
-    {
-        Ray ray{glm::vec3(.0f, .0f, 1.0f), glm::normalize(glm::vec3(-1.0f, .0f, -1.0f))};
-        // raytracer.trace(ray, color);
-        // ASSERT_NEAR(color[0], 1.0f, 1e-6);
-        // ASSERT_NEAR(color[1], .0f, 1e-6);
-        // ASSERT_NEAR(color[2], .0f, 1e-6);
-    }
-
-    // Test case #3 (.0f, .0f, 1.0f), (.0f, 1.0f, -1.0f)
-    {
-        Ray ray{glm::vec3(.0f, .0f, 1.0f), glm::normalize(glm::vec3(.0f, 1.0f, -1.0f))};
-        // raytracer.trace(ray, color);
-        // ASSERT_NEAR(color[0], .0f, 1e-6);
-        // ASSERT_NEAR(color[1], .0f, 1e-6);
-        // ASSERT_NEAR(color[2], .0f, 1e-6);
-    }
-
-    // Test case #4 (.0f, .0f, 1.0f), (.0f, -1.0f, -1.0f)
-    {
-        Ray ray{glm::vec3(.0f, .0f, 1.0f), glm::normalize(glm::vec3(.0f, -1.0f, -1.0f))};
-        // raytracer.trace(ray, color);
-        // ASSERT_NEAR(color[0], .0f, 1e-6);
-        // ASSERT_NEAR(color[1], .0f, 1e-6);
-        // ASSERT_NEAR(color[2], .0f, 1e-6);
-    }
 }
-
-

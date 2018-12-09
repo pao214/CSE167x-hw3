@@ -14,8 +14,8 @@ struct Primitive
 {
 private:
     // Members
-    glm::vec3 ambient, diffuse, specular, emission;
-    float shininess;
+    glm::vec3 ambient;
+    Material material;
     glm::mat4 objToWorld, worldToObj;
     glm::mat4 norObjToWorld, norWorldToObj;
 
@@ -25,8 +25,9 @@ protected:
 
 public:
     // Constructor
-    Primitive(const glm::vec3& ambient, const glm::mat4& objToWorld):
-        ambient(ambient), objToWorld(objToWorld), worldToObj(glm::inverse(objToWorld)),
+    Primitive(const glm::vec3& ambient, const Material& material, const glm::mat4& objToWorld):
+        ambient(ambient), material(material),
+        objToWorld(objToWorld), worldToObj(glm::inverse(objToWorld)),
         norObjToWorld(glm::transpose(worldToObj)), norWorldToObj(glm::transpose(objToWorld)) {}
 
     // Base class requires a virtual destructor.
@@ -35,13 +36,7 @@ public:
     // Setters and getters
     void getMaterial(Material* materialP)
     {
-        new(materialP) Material{
-            .ambient = ambient,
-            .diffuse = diffuse,
-            .specular = specular,
-            .emission = emission,
-            .shininess = shininess
-        };
+        new(materialP) Material{material};
     }
 
     // Operations
