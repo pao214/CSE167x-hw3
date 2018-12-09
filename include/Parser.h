@@ -143,11 +143,40 @@ inline void Parser::parse(const std::string& inputFilename)
             pargv >> shininess;
             scene.setShininess(shininess);
         }
-        else if(cmd == "emission")
+        else if (cmd == "emission")
         {
             glm::vec3 emission;
             pargv >> emission.x >> emission.y >> emission.z;
             scene.setEmission(emission);
+        }
+        else if (cmd == "translate")
+        {
+            glm::vec3 translation;
+            pargv >> translation.x >> translation.y >> translation.z;
+            scene.translate(translation);
+        }
+        else if(cmd == "rotate")
+        {
+            glm::vec3 axis;
+            float angle;
+            pargv
+                >> axis.x >> axis.y >> axis.z
+                >> angle;
+            scene.rotate(axis, glm::radians(angle));
+        }
+        else if (cmd == "scale")
+        {
+            glm::vec3 scaling;
+            pargv >> scaling.x >> scaling.y >> scaling.z;
+            scene.scale(scaling);
+        }
+        else if (cmd == "pushTransform")
+        {
+            scene.pushTransform();
+        }
+        else if (cmd == "popTransform")
+        {
+            scene.popTransform();
         }
         else
         {

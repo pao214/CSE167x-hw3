@@ -103,6 +103,32 @@ public:
         raytracer.setEmission(emission);
     }
 
+    // Transforms
+    void translate(const glm::vec3& translation)
+    {
+        raytracer.translate(translation);
+    }
+
+    void rotate(const glm::vec3& axis, float angle)
+    {
+        raytracer.rotate(axis, angle);
+    }
+
+    void scale(const glm::vec3& scaling)
+    {
+        raytracer.scale(scaling);
+    }
+
+    void pushTransform()
+    {
+        raytracer.pushTransform();
+    }
+
+    void popTransform()
+    {
+        raytracer.popTransform();
+    }
+
     // Operations
     void render()
     {

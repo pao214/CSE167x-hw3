@@ -15,7 +15,7 @@ private:
     std::vector<std::shared_ptr<Light>> lights;
     glm::vec3 attenuation;
     Material material;
-    glm::mat4 transform;
+    std::stack<glm::mat4> transformStack;
 
 protected:
     bool intersect(const Ray& ray, LocalGeo* localGeoP=nullptr, std::shared_ptr<Primitive>* primitiveP=nullptr)
@@ -41,7 +41,10 @@ protected:
 
 public:
     // Constructor
-    Raytracer(): maxDepth(5), attenuation(1.0f, .0f, .0f) {}
+    Raytracer(): maxDepth(5), attenuation(1.0f, .0f, .0f)
+    {
+        transformStack.push(glm::mat4(1.0f));
+    }
 
     // Setters and getters
     void setMaxDepth(int maxDepth)
@@ -53,7 +56,7 @@ public:
     void addSphere(const glm::vec3& center, float radius)
     {
         primitives.push_back(std::make_shared<Sphere>(
-            center, radius, material, transform
+            center, radius, material, transformStack.top()
         ));
     }
 
@@ -70,7 +73,7 @@ public:
     void addTriangle(int A, int B, int C)
     {
         primitives.push_back(std::make_shared<Triangle>(
-            vertices[A], vertices[B], vertices[C], material, transform
+            vertices[A], vertices[B], vertices[C], material, transformStack.top()
         ));
     }
 
@@ -114,6 +117,35 @@ public:
     void setEmission(const glm::vec3& emission)
     {
         this->material.emission = emission;
+    }
+
+    // Transforms
+    void translate(const glm::vec3& translation)
+    {
+        auto& transform = transformStack.top();
+        transform = transform*glm::translate(glm::mat4(1.0f), translation);
+    }
+
+    void rotate(const glm::vec3& axis, float angle)
+    {
+        auto& transform = transformStack.top();
+        transform = transform*glm::rotate(glm::mat4(1.0f), angle, axis);
+    }
+
+    void scale(const glm::vec3& scaling)
+    {
+        auto& transform = transformStack.top();
+        transform = transform*glm::scale(glm::mat4(1.0f), scaling);
+    }
+
+    void pushTransform()
+    {
+        transformStack.push(transformStack.top());
+    }
+
+    void popTransform()
+    {
+        transformStack.pop();
     }
 
     // Operations

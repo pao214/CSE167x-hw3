@@ -8,6 +8,7 @@
 #include <memory>
 #include <array>
 #include <functional>
+#include <stack>
 
 // GLM libraries
 #ifndef GLM_FORCE_RADIANS
