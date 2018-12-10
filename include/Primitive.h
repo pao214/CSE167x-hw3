@@ -49,7 +49,7 @@ public:
         const Ray objRay{
             origin,
             glm::normalize(unit-origin),
-            scale*ray.getMin()
+            ray.getMin()
         };
 
         // Intersect using the primitive specific logic.

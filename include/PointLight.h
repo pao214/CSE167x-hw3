@@ -20,7 +20,7 @@ public:
     void generateLightRay(const LocalGeo& localGeo, Ray* rayP, glm::vec3* colorP) const final
     {
         // Return ray after slight movement.
-        new(rayP) Ray(localGeo.getPoint(), point-localGeo.getPoint(), 1e-6f);
+        new(rayP) Ray(localGeo.getPoint(), point-localGeo.getPoint(), 1e-4f);
 
         // Return color.
         const auto mag = point-localGeo.getPoint();
