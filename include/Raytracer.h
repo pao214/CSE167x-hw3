@@ -161,7 +161,6 @@ public:
             return;
         }
 
-        // std::cerr << "Here" << std::endl;
         // Color the pixel.
         // ambient+emission+sum(v[i]*l[i]/atten[i]*(D*max(N.L,0)+S*max(N.H,0)^s))
         Material material;

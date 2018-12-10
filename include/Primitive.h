@@ -9,6 +9,7 @@
  * FIXME: Combine emission and ambient.
  * FIXME: Derive using `virtual` keyword.
  * FIXME: Is a protected routine necessary, can we override private routines?
+ * FIXME: Is scaling required?
  */
 struct Primitive
 {
@@ -42,12 +43,13 @@ public:
     bool intersect(const Ray& ray, float* tHitP, LocalGeo* localGeoP) const
     {
         // Intersect using the transformed ray.
-        const float scale = glm::length(worldToObj*glm::vec4(ray.getDir(), 1.0f));
+        const auto origin = glm::vec3(worldToObj*glm::vec4(ray.getPoint(), 1.0f));
+        const auto unit = glm::vec3(worldToObj*glm::vec4(ray.getPoint()+ray.getDir(), 1.0f));
+        float scale = glm::length(unit-origin);
         const Ray objRay{
-            glm::vec3(worldToObj*glm::vec4(ray.getPoint(), 1.0f)),
-            glm::vec3(glm::normalize(worldToObj*glm::vec4(ray.getDir(), 1.0f))),
-            scale*ray.getMin(),
-            scale*ray.getMax()
+            origin,
+            glm::normalize(unit-origin),
+            scale*ray.getMin()
         };
 
         // Intersect using the primitive specific logic.
@@ -57,6 +59,7 @@ public:
         }
 
         // Return the intersection point and normal.
+        new(tHitP) float((*tHitP)/scale);
         new(localGeoP) LocalGeo(
             glm::vec3(objToWorld*glm::vec4(localGeoP->getPoint(), 1.0f)),
             glm::vec3(glm::vec3(norObjToWorld*glm::vec4(localGeoP->getNormal(), 1.0f)))
