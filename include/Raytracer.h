@@ -149,8 +149,14 @@ public:
     }
 
     // Operations
-    void trace(const Ray& ray, glm::vec3* colorP)
+    void trace(const Ray& ray, int depth, glm::vec3* colorP)
     {
+        if (depth > maxDepth)
+        {
+            new(colorP) glm::vec3(.0f, .0f, .0f);
+            return;
+        }
+
         LocalGeo localGeo;
         std::shared_ptr<Primitive> primitive;
 
@@ -186,6 +192,16 @@ public:
                 );
             }
         }
+
+        // Recursive step
+        Ray reflectedRay{
+            localGeo.getPoint(),
+            2.0f*glm::dot(localGeo.getNormal(), -1.0f*ray.getDir())*localGeo.getNormal()+ray.getDir(),
+            1e-4
+        };
+        glm::vec3 reflectedColor;
+        trace(reflectedRay, depth+1, &reflectedColor);
+        color += material.specular*reflectedColor;
 
         // Return the color.
         new(colorP) glm::vec3(color);

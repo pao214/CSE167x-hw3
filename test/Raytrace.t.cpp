@@ -313,7 +313,7 @@ INSTANTIATE_TEST_CASE_P(
                 glm::vec3(1.0f, .0f, .0f)
             }),
             LocalGeo{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, .0f, .0f)},
-            Ray{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, .0f, .0f)},
+            Ray{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, .0f, .0f), 1e-4},
             glm::vec3(1.0f, .0f, .0f)
         ),
         std::make_tuple(
@@ -322,7 +322,7 @@ INSTANTIATE_TEST_CASE_P(
                 glm::vec3(.5f, .5f, .5f)
             }),
             LocalGeo{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, .0f, .0f)},
-            Ray{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+            Ray{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, 1.0f, 1.0f), 1e-4},
             glm::vec3(.5f, .5f, .5f)
         ),
         std::make_tuple(
@@ -332,7 +332,7 @@ INSTANTIATE_TEST_CASE_P(
                 glm::vec3(1.0f, .0f, .0f)
             }),
             LocalGeo{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, .0f, .0f)},
-            Ray{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+            Ray{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, 1.0f, 1.0f), 1e-4},
             glm::vec3(1.0f, .0f, 1.0f)
         ),
         std::make_tuple(
@@ -342,7 +342,7 @@ INSTANTIATE_TEST_CASE_P(
                 glm::vec3(1.0f, 1.0f, 1.0f)
             }),
             LocalGeo{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, .0f, .0f)},
-            Ray{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+            Ray{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, 1.0f, 1.0f), 1e-4},
             glm::vec3(1.0f, 1.0f, 1.0f)/(1.0f+glm::sqrt(3.0f)+3.0f)
         )
     )
@@ -351,6 +351,7 @@ INSTANTIATE_TEST_CASE_P(
 TEST(RaytracerTest, TestCase1)
 {
     Raytracer raytracer;
+    raytracer.setMaxDepth(1);
 
     // Lighting
     raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
@@ -370,7 +371,7 @@ TEST(RaytracerTest, TestCase1)
     const Ray ray{glm::vec3(1.0f, .0f, 1.0f/glm::sqrt(2)), glm::vec3(-1.0f, .0f, .0f)};
     const glm::vec3 expectedColor{1.0f/glm::sqrt(2), 1.0f/glm::sqrt(2), 1.0f/glm::sqrt(2)};
     glm::vec3 actualColor;
-    raytracer.trace(ray, &actualColor);
+    raytracer.trace(ray, 0, &actualColor);
 
     // Compare
     ASSERT_NEAR(actualColor.x, expectedColor.x, 1e-6);
@@ -381,6 +382,7 @@ TEST(RaytracerTest, TestCase1)
 TEST(RaytracerTest, TestCase2)
 {
     Raytracer raytracer;
+    raytracer.setMaxDepth(1);
 
     // Lighting
     raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(1.0f, .0f, 1.0f));
@@ -400,7 +402,7 @@ TEST(RaytracerTest, TestCase2)
     const Ray ray{glm::vec3(1.0f, .0f, 1.0f), glm::vec3(-1.0f, .0f, -1.0f)};
     const glm::vec3 expectedColor{1.0f/glm::sqrt(2), .0f, 1.0f/glm::sqrt(2)};
     glm::vec3 actualColor;
-    raytracer.trace(ray, &actualColor);
+    raytracer.trace(ray, 0, &actualColor);
 
     // Compare
     ASSERT_NEAR(actualColor.x, expectedColor.x, 1e-6);
@@ -411,6 +413,7 @@ TEST(RaytracerTest, TestCase2)
 TEST(RaytracerTest, TestCase3)
 {
     Raytracer raytracer;
+    raytracer.setMaxDepth(1);
 
     // Lighting
     raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
@@ -430,7 +433,7 @@ TEST(RaytracerTest, TestCase3)
     const Ray ray{glm::vec3(.0f, .0f, -2.0f), glm::vec3(.0f, .0f, 1.0f)};
     const glm::vec3 expectedColor{.0f, .0f, .0f};
     glm::vec3 actualColor;
-    raytracer.trace(ray, &actualColor);
+    raytracer.trace(ray, 0, &actualColor);
 
     // Compare
     ASSERT_NEAR(actualColor.x, expectedColor.x, 1e-6);
@@ -441,6 +444,7 @@ TEST(RaytracerTest, TestCase3)
 TEST(RaytracerTest, TestCase4)
 {
     Raytracer raytracer;
+    raytracer.setMaxDepth(1);
 
     // Lighting
     raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(.0f, 1.0f, 1.0f));
@@ -460,7 +464,7 @@ TEST(RaytracerTest, TestCase4)
     const Ray ray{glm::vec3(1.0f, .0f, 1.0f/glm::sqrt(2)), glm::vec3(-1.0f, .0f, .0f)};
     const glm::vec3 expectedColor{.0f, 1.0f, 1.0f};
     glm::vec3 actualColor;
-    raytracer.trace(ray, &actualColor);
+    raytracer.trace(ray, 0, &actualColor);
 
     // Compare
     ASSERT_NEAR(actualColor.x, expectedColor.x, 1e-6);
@@ -471,6 +475,7 @@ TEST(RaytracerTest, TestCase4)
 TEST(RaytracerTest, TestCase5)
 {
     Raytracer raytracer;
+    raytracer.setMaxDepth(1);
 
     // Lighting
     raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(1.0f, 1.0f, .0f));
@@ -490,7 +495,7 @@ TEST(RaytracerTest, TestCase5)
     const Ray ray{glm::vec3(1.0f, .0f, 1.0f), glm::vec3(-1.0f, .0f, .0f)};
     const glm::vec3 expectedColor{1.0f/2, 1.0f/2, .0f};
     glm::vec3 actualColor;
-    raytracer.trace(ray, &actualColor);
+    raytracer.trace(ray, 0, &actualColor);
 
     // Compare
     ASSERT_NEAR(actualColor.x, expectedColor.x, 1e-6);
@@ -501,6 +506,7 @@ TEST(RaytracerTest, TestCase5)
 TEST(RaytracerTest, TestCase6)
 {
     Raytracer raytracer;
+    raytracer.setMaxDepth(1);
 
     // Lighting
     raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(1.0f, 1.0f, .0f));
@@ -520,7 +526,7 @@ TEST(RaytracerTest, TestCase6)
     const Ray ray{glm::vec3(1.0f, .0f, 1.0f), glm::vec3(-1.0f, .0f, -1.0f)};
     const glm::vec3 expectedColor{1.0f, 1.0f, 1.0f};
     glm::vec3 actualColor;
-    raytracer.trace(ray, &actualColor);
+    raytracer.trace(ray, 0, &actualColor);
 
     // Compare
     ASSERT_NEAR(actualColor.x, expectedColor.x, 1e-6);
@@ -531,6 +537,7 @@ TEST(RaytracerTest, TestCase6)
 TEST(RaytracerTest, TestCase7)
 {
     Raytracer raytracer;
+    raytracer.setMaxDepth(1);
 
     // Lighting
     raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
@@ -550,7 +557,7 @@ TEST(RaytracerTest, TestCase7)
     const Ray ray{glm::vec3(.0f, .0f, 2.0f), glm::vec3(.0f, .0f, -1.0f)};
     const glm::vec3 expectedColor{1.0f, 1.0f, 1.0f};
     glm::vec3 actualColor;
-    raytracer.trace(ray, &actualColor);
+    raytracer.trace(ray, 0, &actualColor);
 
     // Compare
     ASSERT_NEAR(actualColor.x, expectedColor.x, 1e-6);

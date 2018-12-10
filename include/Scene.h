@@ -140,7 +140,7 @@ public:
         while (sampler.generateSample(&sample))
         {
             camera.generateRay(sample, &ray);
-            raytracer.trace(ray, &color);
+            raytracer.trace(ray, 0, &color);
             film.commit(static_cast<int>(sample[0]), static_cast<int>(sample[1]), color);
         }
 

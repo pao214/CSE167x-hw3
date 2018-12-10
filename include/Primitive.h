@@ -10,6 +10,7 @@
  * FIXME: Derive using `virtual` keyword.
  * FIXME: Is a protected routine necessary, can we override private routines?
  * FIXME: Is scaling required?
+ * FIXME: Use normal transformations
  */
 struct Primitive
 {

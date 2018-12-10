@@ -7,7 +7,7 @@ ODIR = obj
 SDIR = src
 TDIR = test
 
-CFLAGS = -Iglm-0.9.7.1 -I$(IDIR) -g -std=c++14 -Wall -Werror
+CFLAGS = -Iglm-0.9.7.1 -I$(IDIR) -O3 -std=c++14 -Wall -Werror
 LDFLAGS = -L$(LDIR) -lfreeimage
 
 _DEPS = Camera.h DirLight.h Film.h FreeImage.h General.h Light.h LocalGeo.h Material.h Parser.h PointLight.h Primitive.h Ray.h Raytracer.h Sampler.h Scene.h Sphere.h Triangle.h
