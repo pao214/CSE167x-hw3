@@ -309,7 +309,7 @@ INSTANTIATE_TEST_CASE_P(
     ::testing::Values(
         std::make_tuple(
             std::make_shared<DirLight>(DirLight{
-                glm::vec3(-1.0f, .0f, .0f),
+                glm::vec3(1.0f, .0f, .0f),
                 glm::vec3(1.0f, .0f, .0f)
             }),
             LocalGeo{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, .0f, .0f)},
@@ -318,7 +318,7 @@ INSTANTIATE_TEST_CASE_P(
         ),
         std::make_tuple(
             std::make_shared<DirLight>(DirLight{
-                glm::vec3(-1.0f, -1.0f, -1.0f),
+                glm::vec3(1.0f, 1.0f, 1.0f),
                 glm::vec3(.5f, .5f, .5f)
             }),
             LocalGeo{glm::vec3(.0f, .0f, .0f), glm::vec3(1.0f, .0f, .0f)},
@@ -354,7 +354,7 @@ TEST(RaytracerTest, TestCase1)
     raytracer.setMaxDepth(1);
 
     // Lighting
-    raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+    raytracer.addDirLight(glm::vec3(.0f, .0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
     raytracer.setAttenuation(glm::vec3(1.0f, .0f, .0f));
     raytracer.setAmbient(glm::vec3(.0f, .0f, .0f));
     
@@ -385,7 +385,7 @@ TEST(RaytracerTest, TestCase2)
     raytracer.setMaxDepth(1);
 
     // Lighting
-    raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(1.0f, .0f, 1.0f));
+    raytracer.addDirLight(glm::vec3(.0f, .0f, 1.0f), glm::vec3(1.0f, .0f, 1.0f));
     raytracer.setAttenuation(glm::vec3(1.0f, .0f, .0f));
     raytracer.setAmbient(glm::vec3(.0f, .0f, .0f));
     
@@ -416,7 +416,7 @@ TEST(RaytracerTest, TestCase3)
     raytracer.setMaxDepth(1);
 
     // Lighting
-    raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+    raytracer.addDirLight(glm::vec3(.0f, .0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
     raytracer.setAttenuation(glm::vec3(1.0f, .0f, .0f));
     raytracer.setAmbient(glm::vec3(.0f, .0f, .0f));
     
@@ -447,7 +447,7 @@ TEST(RaytracerTest, TestCase4)
     raytracer.setMaxDepth(1);
 
     // Lighting
-    raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(.0f, 1.0f, 1.0f));
+    raytracer.addDirLight(glm::vec3(.0f, .0f, 1.0f), glm::vec3(.0f, 1.0f, 1.0f));
     raytracer.setAttenuation(glm::vec3(1.0f, .0f, .0f));
     raytracer.setAmbient(glm::vec3(.0f, .0f, .0f));
     
@@ -478,7 +478,7 @@ TEST(RaytracerTest, TestCase5)
     raytracer.setMaxDepth(1);
 
     // Lighting
-    raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(1.0f, 1.0f, .0f));
+    raytracer.addDirLight(glm::vec3(.0f, .0f, 1.0f), glm::vec3(1.0f, 1.0f, .0f));
     raytracer.setAttenuation(glm::vec3(1.0f, .0f, .0f));
     raytracer.setAmbient(glm::vec3(.0f, .0f, .0f));
     
@@ -509,7 +509,7 @@ TEST(RaytracerTest, TestCase6)
     raytracer.setMaxDepth(1);
 
     // Lighting
-    raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(1.0f, 1.0f, .0f));
+    raytracer.addDirLight(glm::vec3(.0f, .0f, 1.0f), glm::vec3(1.0f, 1.0f, .0f));
     raytracer.setAttenuation(glm::vec3(1.0f, .0f, .0f));
     raytracer.setAmbient(glm::vec3(1.0f, 1.0f, 1.0f));
     
@@ -540,7 +540,7 @@ TEST(RaytracerTest, TestCase7)
     raytracer.setMaxDepth(1);
 
     // Lighting
-    raytracer.addDirLight(glm::vec3(.0f, .0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+    raytracer.addDirLight(glm::vec3(.0f, .0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
     raytracer.setAttenuation(glm::vec3(1.0f, .0f, .0f));
     raytracer.setAmbient(glm::vec3(.0f, .0f, .0f));
     

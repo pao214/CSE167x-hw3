@@ -44,13 +44,14 @@ public:
     bool intersect(const Ray& ray, float* tHitP, LocalGeo* localGeoP) const
     {
         // Intersect using the transformed ray.
-        const auto origin = glm::vec3(worldToObj*glm::vec4(ray.getPoint(), 1.0f));
-        const auto unit = glm::vec3(worldToObj*glm::vec4(ray.getPoint()+ray.getDir(), 1.0f));
-        float scale = glm::length(unit-origin);
+        // const auto origin = glm::vec3(worldToObj*glm::vec4(ray.getPoint(), 1.0f));
+        // const auto unit = glm::vec3(worldToObj*glm::vec4(ray.getPoint()+ray.getDir(), 1.0f));
+        float scale = glm::length(glm::vec3(norWorldToObj*glm::vec4(ray.getDir(), 1.0f)));
         const Ray objRay{
-            origin,
-            glm::normalize(unit-origin),
-            ray.getMin()
+            glm::vec3(worldToObj*glm::vec4(ray.getPoint(), 1.0f)),
+            glm::vec3(norWorldToObj*glm::vec4(ray.getDir(), 1.0f)),
+            scale*ray.getMin(),
+            scale*ray.getMax()
         };
 
         // Intersect using the primitive specific logic.

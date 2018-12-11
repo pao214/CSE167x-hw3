@@ -24,7 +24,7 @@ public:
         float r = glm::sqrt(r2);
 
         // Return ray after slight movement.
-        new(rayP) Ray(localGeo.getPoint(), point-localGeo.getPoint(), 1e-4f, r);
+        new(rayP) Ray(localGeo.getPoint(), point-localGeo.getPoint(), 1e-2f, r);
 
         // Return color.
         new(colorP) glm::vec3(color/(attenuation.x+attenuation.y*r+attenuation.z*r2));
